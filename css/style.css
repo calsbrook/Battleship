@@ -1,0 +1,26 @@
+table {
+    border: 1px black solid;
+    border-collapse: collapse;
+    margin: auto;
+}
+
+h1 {
+    position: absolute;
+}
+
+h2 {
+    position: absolute;
+}
+
+td {
+    border: 3px black solid;
+    width: 34px;
+    height: 34px;
+    background-image: url("https://i.pinimg.com/564x/db/7f/87/db7f877b7bc382693084993cf91343bd.jpg");
+    
+}
+
+#opponentGrid td:hover {
+    background-image: url('http://www.publicdomainpictures.net/pictures/150000/velka/cyan-blue-colour.jpg');
+    background-color: cyan;
+}
