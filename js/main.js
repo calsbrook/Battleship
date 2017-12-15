@@ -61,7 +61,7 @@ opponentGrid.addEventListener('click', function(e){
     checkHit(boardA);
     render();
     goodGuess = holder;
-    guessCoord();
+    checkTurn();
 });
 /*AI*/
 
@@ -81,18 +81,23 @@ function checkHit(board) {
     console.log(coord)
     switch(board[coord]) {
         case 'H':
-            break;
+            if (turn === 1)break;
+            if (turn === (-1)) guessCoord();
         case 'M':
-            break;
+            if (turn === 1)break;
+            if (turn === (-1)) guessCoord();
         case 0:
             board[coord] = 'M';
+            turn *= (-1)
             goodGuess = false;
             break;
         case 'A': //aircraft carrier
             board[coord] = 'H';
+            scoreAdd();
+            turn *= (-1)
             goodGuess = true;
             tries += 1
-            playerScore += 1;
+
             if (checkSink('A', board)) {
                 break} else {
                     msg.innerHTML =`You sunk the ${ships[0].name}`;
@@ -103,9 +108,11 @@ function checkHit(board) {
             break;
         case 'B': //battleship
             board[coord] = 'H';
+            scoreAdd();
+            turn *= (-1)
             goodGuess = true;
             tries += 1
-            playerScore += 1;
+
             if (checkSink('B', board)) {
                 break} else {
                     msg.innerHTML =`You sunk the ${ships[1].name}`;
@@ -115,10 +122,12 @@ function checkHit(board) {
                 }
             break;
         case 'C': //cruiser
+            scoreAdd();
             board[coord] = 'H';
+            turn *= (-1)
             goodGuess = true;
             tries += 1
-            playerScore += 1;
+
             if (checkSink('C',board)) {
                 break} else {
                     msg.innerHTML =`You sunk the ${ships[2].name}`;
@@ -128,9 +137,11 @@ function checkHit(board) {
                 }
             break;
         case 'S': //submarine
+            scoreAdd();
             board[coord] = 'H';
+            turn *= (-1)
             goodGuess = true;
-            playerScore += 1;
+
             tries += 1
             if (checkSink('S', board)) {
                 break} else {
@@ -141,9 +152,10 @@ function checkHit(board) {
                 }
             break;
         case 'D': //destroyer
+            scoreAdd();
             board[coord] = 'H';
+            turn *= (-1)
             goodGuess = true;
-            playerScore += 1;
             tries += 1
             if (checkSink('D', board)) {
                 break} else {
@@ -160,7 +172,6 @@ function checkHit(board) {
     if(checkWin(aiScore)) {
         winMsg.innerHTML = 'This AI is a couple days old and beat you...'
     }
-    turn *= (-1)
 }
 
 function checkWin(playOrAI) {
@@ -168,6 +179,14 @@ function checkWin(playOrAI) {
         return true;
     } else {
         return false;
+    }
+}
+
+function scoreAdd() {
+    if (turn === 1) {
+        playerScore += 1;
+    } else if (turn === (-1)) {
+        aiScore += 1;
     }
 }
 
@@ -194,6 +213,14 @@ function init() {
     playerScore = aiScore = 0;
     turn = 1;
     render();
+}
+
+function checkTurn() {
+    if (turn === 1) {
+        return
+    } else {
+        guessCoord();
+    }
 }
 
 /*calling to start*/
