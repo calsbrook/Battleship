@@ -2,9 +2,13 @@
 var opponentGrid = document.getElementById('opponentGrid');
 var msg = document.getElementById('msg');
 var winMsg = document.getElementById('winMsg');
-var turn, guess, coord;
+var guess, coord;
+var turn = 1
 var playerScore = 0;
 var aiScore = 0;
+var goodGuess = false;
+var holder = false;
+var tries = 0;
 
 var ships = [
     {
@@ -53,32 +57,43 @@ var hits = {
 
 opponentGrid.addEventListener('click', function(e){
     coord = e.target.id;
+    holder = goodGuess;
     checkHit(boardA);
     render();
+    goodGuess = holder;
+    guessCoord();
 });
 /*AI*/
 
 function guessCoord() {
+    if (goodGuess) {
+        coord = guess + tries;
+    } else {
     coord = Math.floor(Math.random() * 100);
     guess = coord;
+    }
     checkHit(boardP);
     render();
 }
 
 /*functions*/
 function checkHit(board) {
+    console.log(coord)
     switch(board[coord]) {
         case 'H':
             break;
         case 'M':
             break;
         case 0:
-            board[coord] = 'M'
+            board[coord] = 'M';
+            goodGuess = false;
             break;
         case 'A': //aircraft carrier
             board[coord] = 'H';
+            goodGuess = true;
+            tries += 1
             playerScore += 1;
-            if (checkSink('A')) {
+            if (checkSink('A', board)) {
                 break} else {
                     msg.innerHTML =`You sunk the ${ships[0].name}`;
                     setTimeout(function() {
@@ -88,8 +103,10 @@ function checkHit(board) {
             break;
         case 'B': //battleship
             board[coord] = 'H';
+            goodGuess = true;
+            tries += 1
             playerScore += 1;
-            if (checkSink('B')) {
+            if (checkSink('B', board)) {
                 break} else {
                     msg.innerHTML =`You sunk the ${ships[1].name}`;
                     setTimeout(function() {
@@ -99,8 +116,10 @@ function checkHit(board) {
             break;
         case 'C': //cruiser
             board[coord] = 'H';
+            goodGuess = true;
+            tries += 1
             playerScore += 1;
-            if (checkSink('C')) {
+            if (checkSink('C',board)) {
                 break} else {
                     msg.innerHTML =`You sunk the ${ships[2].name}`;
                     setTimeout(function() {
@@ -110,8 +129,10 @@ function checkHit(board) {
             break;
         case 'S': //submarine
             board[coord] = 'H';
+            goodGuess = true;
             playerScore += 1;
-            if (checkSink('S')) {
+            tries += 1
+            if (checkSink('S', board)) {
                 break} else {
                     msg.innerHTML =`You sunk the ${ships[3].name}`;
                     setTimeout(function() {
@@ -121,8 +142,10 @@ function checkHit(board) {
             break;
         case 'D': //destroyer
             board[coord] = 'H';
+            goodGuess = true;
             playerScore += 1;
-            if (checkSink('D')) {
+            tries += 1
+            if (checkSink('D', board)) {
                 break} else {
                     msg.innerHTML =`You sunk the ${ships[4].name}`;
                     setTimeout(function() {
@@ -152,8 +175,8 @@ function render() {
     arrayCallback();
 }
 
-function checkSink(type) {
-    return boardA.some(function (val) {
+function checkSink(type, board) {
+    return board.some(function (val) {
         return val === type;
     })
 }
@@ -174,4 +197,4 @@ function init() {
 }
 
 /*calling to start*/
-//init();
+init();
