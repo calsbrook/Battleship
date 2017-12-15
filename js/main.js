@@ -1,5 +1,6 @@
 /*vars and stuff*/
 var opponentGrid = document.getElementById('opponentGrid');
+var playerGrid = document.getElementById('playerGrid');
 var msg = document.getElementById('msg');
 var winMsg = document.getElementById('winMsg');
 var guess, coord;
@@ -10,47 +11,55 @@ var goodGuess = false;
 var holder = false;
 var tries = 0;
 
-var ships = [
-    {
+var ships = {
+    'aircraft-carrier': {
         name: 'aircraft-carrier',
+        abb: 'A',
         size: 5,
         sound: 'placeholder'
     },
-    {
+    battleship: {
         name: 'battleship',
+        abb: 'B',
         size: 4,
         sound: 'placeholder'
     },
-    {
+    cruiser: {
         name: 'cruiser',
+        abb: 'C',
         size: 3,
         sound: 'placeholder'
     },
-    {
+    submarine: {
         name: 'submarine',
+        abb: 'S',
         size: 3,
         sound: 'placeholder'
     },
-    {
+    destroyer: {
         name: 'destroyer',
+        abb: 'D',
         size: 2,
         sound: 'placeholder'
     }
-]
+}
 
 var boardA = new Array(100).fill(0);
 
 var boardP = new Array(100).fill(0);
 
-var hits = {
+var hitsA = {
     H: 'url("https://www.caribbeannationalweekly.com/wp-content/uploads/2017/06/ornage.jpg")',
     M: 'url("http://www.porcelaingres.com/img/collezioni/JUST-GREY/big/just_grey_light_grey.jpg")',
-    0: '',
-    A: '',
-    B: '',
-    C: '',
-    S: '',
-    D: ''
+}
+var hitsP = {
+    H: 'url("https://www.caribbeannationalweekly.com/wp-content/uploads/2017/06/ornage.jpg")',
+    M: 'url("http://www.porcelaingres.com/img/collezioni/JUST-GREY/big/just_grey_light_grey.jpg")',
+    A: 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Flag_of_Afghanistan_%281880%E2%80%931901%29.svg/2000px-Flag_of_Afghanistan_%281880%E2%80%931901%29.svg.png")',
+    B: 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Flag_of_Afghanistan_%281880%E2%80%931901%29.svg/2000px-Flag_of_Afghanistan_%281880%E2%80%931901%29.svg.png")',
+    C: 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Flag_of_Afghanistan_%281880%E2%80%931901%29.svg/2000px-Flag_of_Afghanistan_%281880%E2%80%931901%29.svg.png")',
+    S: 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Flag_of_Afghanistan_%281880%E2%80%931901%29.svg/2000px-Flag_of_Afghanistan_%281880%E2%80%931901%29.svg.png")',
+    D: 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Flag_of_Afghanistan_%281880%E2%80%931901%29.svg/2000px-Flag_of_Afghanistan_%281880%E2%80%931901%29.svg.png")'
 }
 
 /*event listeners*/
@@ -63,6 +72,13 @@ opponentGrid.addEventListener('click', function(e){
     goodGuess = holder;
     checkTurn();
 });
+
+playerGrid.addEventListener('click', function(e){
+    place = e.target.id;
+    console.log(place)
+    placePlayerShips('aircraft-carrier');
+    render();
+})
 /*AI*/
 
 function guessCoord() {
@@ -168,10 +184,19 @@ function checkHit(board) {
     }
     if(checkWin(playerScore)) {
         winMsg.innerHTML = 'Y O U W O N';
+        turn = 0;
     }
     if(checkWin(aiScore)) {
-        winMsg.innerHTML = 'This AI is a couple days old and beat you...'
+        winMsg.innerHTML = 'This AI is a couple days old and beat you...';
+        turn = 0
     }
+}
+
+function placePlayerShips(ship) {
+    for (i = 0; i < ships[ship].size; i++) {
+        boardP[i + (place - 100)] = ships[ship].abb;
+    }
+    render();
 }
 
 function checkWin(playOrAI) {
@@ -202,8 +227,8 @@ function checkSink(type, board) {
 
 function arrayCallback(turn, idx) {
     for (i=0; i<boardA.length; i++) {
-        document.getElementById(i).style.backgroundImage = hits[boardA[i]];
-        document.getElementById((i + 100)).style.backgroundImage = hits[boardP[i]];
+        document.getElementById(i).style.backgroundImage = hitsA[boardA[i]];
+        document.getElementById((i + 100)).style.backgroundImage = hitsP[boardP[i]];
     }
 }
 

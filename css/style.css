@@ -6,6 +6,11 @@ table {
 
 h1 {
     position: absolute;
+    display: block;
+    align-items: center;
+    margin: auto;
+    color: gray;
+    background-color: yellow;
 }
 
 h2 {
