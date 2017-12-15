@@ -25,6 +25,19 @@ td {
     
 }
 
+ul {
+    position: absolute;
+    margin: auto;
+    display: inline-block;
+}
+
+li {
+    list-style-type: none;
+    border: 1px black solid;
+    background-color: cyan;
+    cursor: pointer;
+}
+
 #opponentGrid td:hover {
     background-image: url('http://www.publicdomainpictures.net/pictures/150000/velka/cyan-blue-colour.jpg');
     background-color: cyan;

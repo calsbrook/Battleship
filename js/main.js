@@ -3,6 +3,8 @@ var opponentGrid = document.getElementById('opponentGrid');
 var playerGrid = document.getElementById('playerGrid');
 var msg = document.getElementById('msg');
 var winMsg = document.getElementById('winMsg');
+var bank = document.getElementById('bank');
+var shipToPlace = '';
 var guess, coord;
 var turn = 1
 var playerScore = 0;
@@ -76,8 +78,13 @@ opponentGrid.addEventListener('click', function(e){
 playerGrid.addEventListener('click', function(e){
     place = e.target.id;
     console.log(place)
-    placePlayerShips('aircraft-carrier');
+    placePlayerShips(shipToPlace);
     render();
+})
+
+bank.addEventListener('click', function(e){
+    shipToPlace = e.target.id;
+    console.log(e.target.id)
 })
 /*AI*/
 
@@ -150,7 +157,7 @@ function checkHit(board) {
 
             if (checkSink('C',board)) {
                 break} else {
-                    msg.innerHTML =`You sunk the carrier`;
+                    msg.innerHTML =`You sunk the cruiser`;
                     setTimeout(function() {
                         msg.innerHTML = '';
                     },3000)
