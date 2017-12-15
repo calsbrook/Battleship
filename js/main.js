@@ -1,9 +1,8 @@
 /*vars and stuff*/
 var opponentGrid = document.getElementById('opponentGrid');
-var coord = 0;
 var msg = document.getElementById('msg');
 var winMsg = document.getElementById('winMsg');
-var turn, guess;
+var turn, guess, coord;
 var playerScore = 0;
 var aiScore = 0;
 
@@ -60,8 +59,9 @@ opponentGrid.addEventListener('click', function(e){
 /*AI*/
 
 function guessCoord() {
-    guess = Math.floor(Math.random() * 100);
-    checkHit(boardB);
+    coord = Math.floor(Math.random() * 100);
+    guess = coord;
+    checkHit(boardP);
     render();
 }
 
@@ -131,25 +131,17 @@ function checkHit(board) {
                 }
             break;
     }
-    if(checkPWin()) {
+    if(checkWin(playerScore)) {
         winMsg.innerHTML = 'Y O U W O N';
     }
-    if(checkAWin()) {
+    if(checkWin(aiScore)) {
         winMsg.innerHTML = 'This AI is a couple days old and beat you...'
     }
     turn *= (-1)
 }
 
-function checkPWin() {
-    if(playerScore === 17) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-function checkAWin() {
-    if(aiScore === 17) {
+function checkWin(playOrAI) {
+    if(playOrAI === 17) {
         return true;
     } else {
         return false;
@@ -168,16 +160,18 @@ function checkSink(type) {
 
 function arrayCallback(turn, idx) {
     for (i=0; i<boardA.length; i++) {
-        document.getElementById(i).style.backgroundImage = hits[boardA[i]]
+        document.getElementById(i).style.backgroundImage = hits[boardA[i]];
+        document.getElementById((i + 100)).style.backgroundImage = hits[boardP[i]];
     }
 }
 
 function init() {
-    boardA = boardB = new Array(100).fill(0);
+    boardA = new Array(100).fill(0);
+    boardP = new Array(100).fill(0);
     playerScore = aiScore = 0;
     turn = 1;
     render();
 }
 
 /*calling to start*/
-init();
+//init();
