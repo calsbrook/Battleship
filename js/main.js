@@ -85,8 +85,9 @@ function guessCoord() {
     if (goodGuess) {
         coord = guess + tries;
     } else {
-    coord = Math.floor(Math.random() * 100);
-    guess = coord;
+        tries = 0;
+        coord = Math.floor(Math.random() * 100);
+        guess = coord;
     }
     checkHit(boardP);
     render();
@@ -98,7 +99,10 @@ function checkHit(board) {
     switch(board[coord]) {
         case 'H':
             if (turn === 1)break;
-            if (turn === (-1)) guessCoord();
+            if (turn === (-1)) {
+                goodGuess = false;
+                guessCoord();
+            }
         case 'M':
             if (turn === 1)break;
             if (turn === (-1)) guessCoord();
@@ -116,7 +120,7 @@ function checkHit(board) {
 
             if (checkSink('A', board)) {
                 break} else {
-                    msg.innerHTML =`You sunk the ${ships[0].name}`;
+                    msg.innerHTML =`You sunk the aircraft carrier`;
                     setTimeout(function() {
                         msg.innerHTML = '';
                     },3000)
@@ -131,7 +135,7 @@ function checkHit(board) {
 
             if (checkSink('B', board)) {
                 break} else {
-                    msg.innerHTML =`You sunk the ${ships[1].name}`;
+                    msg.innerHTML =`You sunk the battleship`;
                     setTimeout(function() {
                         msg.innerHTML = '';
                     },3000)
@@ -146,7 +150,7 @@ function checkHit(board) {
 
             if (checkSink('C',board)) {
                 break} else {
-                    msg.innerHTML =`You sunk the ${ships[2].name}`;
+                    msg.innerHTML =`You sunk the carrier`;
                     setTimeout(function() {
                         msg.innerHTML = '';
                     },3000)
@@ -161,7 +165,7 @@ function checkHit(board) {
             tries += 1
             if (checkSink('S', board)) {
                 break} else {
-                    msg.innerHTML =`You sunk the ${ships[3].name}`;
+                    msg.innerHTML =`You sunk the submarine`;
                     setTimeout(function() {
                         msg.innerHTML = '';
                     },3000)
@@ -175,7 +179,7 @@ function checkHit(board) {
             tries += 1
             if (checkSink('D', board)) {
                 break} else {
-                    msg.innerHTML =`You sunk the ${ships[4].name}`;
+                    msg.innerHTML =`You sunk the destroyer`;
                     setTimeout(function() {
                         msg.innerHTML = '';
                     },3000)
