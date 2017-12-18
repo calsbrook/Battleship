@@ -8,8 +8,6 @@ var horiVert = document.getElementById('horiVert');
 var shipToPlace = '';
 var guess, coord;
 var turn = 1
-var playerScore = 0;
-var aiScore = 0;
 var goodGuess = false;
 var holder = false;
 var tries = 0;
@@ -156,15 +154,15 @@ function guessCoord() {
 }
 
 function hideShips() {
-    coord = Math.floor(Math.random() * 100);
+    coord = Math.floor(Math.random() * (100 - 5));
     placeAIShips('aircraft-carrier', coord);
-    coord = Math.floor(Math.random() * 100);
+    coord = Math.floor(Math.random() * (100 - 4));
     placeAIShips('battleship', coord);
-    coord = Math.floor(Math.random() * 100);
+    coord = Math.floor(Math.random() * (100 - 3));
     placeAIShips('cruiser', coord);
-    coord = Math.floor(Math.random() * 100);
+    coord = Math.floor(Math.random() * (100 - 3));
     placeAIShips('submarine', coord);
-    coord = Math.floor(Math.random() * 100);
+    coord = Math.floor(Math.random() * (100 - 2));
     placeAIShips('destroyer', coord);
 }
 
@@ -183,7 +181,7 @@ function placeAIShips(ship) {
 
 /*-----------------------functions---------------------------------*/
 function checkHit(board) {
-    console.log(coord)
+    if (turn === 0) return;
     switch(board[coord].toString().charAt(0)) {
         case 'H':
             goodGuess = false;
@@ -202,11 +200,7 @@ function checkHit(board) {
             goodGuess = false;
             break;
         case 'A': //aircraft carrier
-            board[coord] = 'H';
-            scoreAdd();
-            turn *= (-1)
-            goodGuess = true;
-            tries += 1
+            hit(board, coord);
             if (checkSink('A', board)) {
                 break} else {
                     msg.innerHTML =`${playerOrAI()} sank an aircraft carrier`;
@@ -216,12 +210,7 @@ function checkHit(board) {
                 }
             break;
         case 'B': //battleship
-            board[coord] = 'H';
-            scoreAdd();
-            turn *= (-1)
-            goodGuess = true;
-            tries += 1
-
+            hit(board, coord);
             if (checkSink('B', board)) {
                 break} else {
                     msg.innerHTML =`${playerOrAI()} sank a battleship`;
@@ -231,12 +220,7 @@ function checkHit(board) {
                 }
             break;
         case 'C': //cruiser
-            scoreAdd();
-            board[coord] = 'H';
-            turn *= (-1)
-            goodGuess = true;
-            tries += 1
-
+            hit(board, coord);
             if (checkSink('C',board)) {
                 break} else {
                     msg.innerHTML =`${playerOrAI()} sank a cruiser`;
@@ -246,12 +230,7 @@ function checkHit(board) {
                 }
             break;
         case 'S': //submarine
-            scoreAdd();
-            board[coord] = 'H';
-            turn *= (-1)
-            goodGuess = true;
-
-            tries += 1
+            hit(board, coord);
             if (checkSink('S', board)) {
                 break} else {
                     msg.innerHTML =`${playerOrAI()} sank a submarine`;
@@ -261,11 +240,7 @@ function checkHit(board) {
                 }
             break;
         case 'D': //destroyer
-            scoreAdd();
-            board[coord] = 'H';
-            turn *= (-1)
-            goodGuess = true;
-            tries += 1
+            hit(board, coord);
             if (checkSink('D', board)) {
                 break} else {
                     msg.innerHTML =`${playerOrAI()} sank a destroyer`;
@@ -275,16 +250,7 @@ function checkHit(board) {
                 }
             break;
     }
-    if(checkWin(playerScore)) {
-        winMsg.innerHTML = 'Y O U W O N';
-        player.src = "http://k003.kiwi6.com/hotlink/9mtc9dy3dq/Soviet_Union_National_Anthem_8-bit_Remix_25Osc_.mp3";
-        player.play();
-        turn = 0;
-    }
-    if(checkWin(aiScore)) {
-        winMsg.innerHTML = 'This AI is a couple days old and beat you...';
-        turn = 0
-    }
+    checkWin();
 }
 
 function placePlayerShips(ship) {
@@ -303,19 +269,26 @@ function placePlayerShips(ship) {
     render();
 }
 
-function checkWin(playOrAI) {
-    if(playOrAI === 17) {
-        return true;
-    } else {
-        return false;
-    }
+function hit(board, coord) {
+    board[coord] = 'H';
+    turn *= (-1)
+    goodGuess = true;
+    tries += 1
 }
 
-function scoreAdd() {
-    if (turn === 1) {
-        playerScore += 1;
-    } else if (turn === (-1)) {
-        aiScore += 1;
+function checkWin() {
+    if(!checkSink('A', boardA) && !checkSink('B', boardA) && 
+    !checkSink('C', boardA) && !checkSink('S', boardA) &&
+    !checkSink('D', boardA)) {
+        winMsg.innerHTML = 'YOU WON';
+        player.src = "http://k003.kiwi6.com/hotlink/9mtc9dy3dq/Soviet_Union_National_Anthem_8-bit_Remix_25Osc_.mp3";
+        player.play;
+        turn = 0;
+    } else if (!checkSink('A', boardP) && !checkSink('B', boardP) && 
+    !checkSink('C', boardP) && !checkSink('S', boardP) &&
+    !checkSink('D', boardP)) {
+        winMsg.innerHTML = 'This AI is a couple days old and beat you...';
+        turn = 0
     }
 }
 
@@ -339,7 +312,6 @@ function arrayCallback() {
 function init() {
     boardA = new Array(100).fill(0);
     boardP = new Array(100).fill(0);
-    playerScore = aiScore = 0;
     turn = 1;
     for (const ship in ships) {
         ships[ship].count = 0;
