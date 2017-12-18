@@ -1,4 +1,4 @@
-/*vars and stuff*/
+/*------------------------vars and stuff--------------------------*/
 var opponentGrid = document.getElementById('opponentGrid');
 var playerGrid = document.getElementById('playerGrid');
 var msg = document.getElementById('msg');
@@ -86,7 +86,7 @@ var hitsP = {
     D1: 'url("https://i.imgur.com/pHeIkOj.png")'
 }
 
-/*event listeners*/
+/*----------------------------event listeners---------------------*/
 
 opponentGrid.addEventListener('click', function(e){
     coord = e.target.id;
@@ -119,13 +119,13 @@ horiVert.addEventListener('click', function(e){
     }
 })
 
-/*AI*/
+/*--------------------------AI----------------------------*/
 
 function guessCoord() {
     if (goodGuess) {
         coord = guess + tries;
     } else {
-        tries = 0;
+        tries = 0
         coord = Math.floor(Math.random() * 100);
         guess = coord;
     }
@@ -159,7 +159,7 @@ function placeAIShips(ship) {
     render();
 }
 
-/*functions*/
+/*-----------------------functions---------------------------------*/
 function checkHit(board) {
     console.log(coord)
     switch(board[coord].toString().charAt(0)) {
@@ -187,7 +187,7 @@ function checkHit(board) {
             tries += 1
             if (checkSink('A', board)) {
                 break} else {
-                    msg.innerHTML =`You sank the aircraft carrier`;
+                    msg.innerHTML =`${playerOrAI()} sank an aircraft carrier`;
                     setTimeout(function() {
                         msg.innerHTML = '';
                     },3000)
@@ -202,7 +202,7 @@ function checkHit(board) {
 
             if (checkSink('B', board)) {
                 break} else {
-                    msg.innerHTML =`You sank the battleship`;
+                    msg.innerHTML =`${playerOrAI()} sank a battleship`;
                     setTimeout(function() {
                         msg.innerHTML = '';
                     },3000)
@@ -217,7 +217,7 @@ function checkHit(board) {
 
             if (checkSink('C',board)) {
                 break} else {
-                    msg.innerHTML =`You sank the cruiser`;
+                    msg.innerHTML =`${playerOrAI()} sank a cruiser`;
                     setTimeout(function() {
                         msg.innerHTML = '';
                     },3000)
@@ -232,7 +232,7 @@ function checkHit(board) {
             tries += 1
             if (checkSink('S', board)) {
                 break} else {
-                    msg.innerHTML =`You sank the submarine`;
+                    msg.innerHTML =`${playerOrAI()} sank a submarine`;
                     setTimeout(function() {
                         msg.innerHTML = '';
                     },3000)
@@ -246,7 +246,7 @@ function checkHit(board) {
             tries += 1
             if (checkSink('D', board)) {
                 break} else {
-                    msg.innerHTML =`You sank the destroyer`;
+                    msg.innerHTML =`${playerOrAI()} sank a destroyer`;
                     setTimeout(function() {
                         msg.innerHTML = '';
                     },3000)
@@ -322,6 +322,7 @@ function init() {
     for (const ship in ships) {
         ships[ship].count = 0;
     }
+    winMsg.innerText = '';
     player.pause();
     render();
 }
@@ -334,5 +335,13 @@ function checkTurn() {
     }
 }
 
-/*calling to start*/
+function playerOrAI() {
+    if (turn === (-1)) {
+        return 'You';
+    } else {
+        return 'AI'
+    }
+}
+
+/*------------------------calling to start------------------------*/
 init();
