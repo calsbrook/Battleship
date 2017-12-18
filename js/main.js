@@ -67,23 +67,45 @@ var hitsP = {
     H: 'url("https://i.imgur.com/QLotCpU.png")',
     M: 'url("https://i.imgur.com/DtyBdAn.png")',
     0: 'url("https://i.imgur.com/sljAQJ1.png)',
+    //aircraft carrier
     A0: 'url("https://i.imgur.com/6dK6uJh.png")',
     A1: 'url("https://i.imgur.com/Rn6DeJm.png")',
     A2: 'url("https://i.imgur.com/z9ZEWk8.png")',
-    A3: 'url("https://i.imgur.com/DzYdHpy.png")',
+    A3: 'url("https://i.imgur.com/R1OyKrY.png")',
     A4: 'url("https://i.imgur.com/klA39sv.png")',
+    A0V: 'url("https://i.imgur.com/yLaoc5y.png")',
+    A1V: 'url("https://i.imgur.com/hKRiZl3.png")',
+    A2V: 'url("https://i.imgur.com/YFQvWzB.png")',
+    A3V: 'url("https://i.imgur.com/JgMAG4j.png")',
+    A4V: 'url("https://i.imgur.com/HxLllQY.png")',
+    //battleship
     B0: 'url("https://i.imgur.com/0LWdSN8.png")',
     B1: 'url("https://i.imgur.com/6Eduamo.png")',
     B2: 'url("https://i.imgur.com/B3mxgyv.png")',
     B3: 'url("https://i.imgur.com/Yk8Yxpk.png")',
+    B0V: 'url("https://i.imgur.com/55ekjqQ.png")',
+    B1V: 'url("https://i.imgur.com/n3JoHuf.png")',
+    B2V: 'url("https://i.imgur.com/v7zhplI.png")',
+    B3V: 'url("https://i.imgur.com/Owu8s1n.png")',
+    //cruiser
     C0: 'url("https://i.imgur.com/wg6rjF9.png")',
     C1: 'url("https://i.imgur.com/0BIzrkg.png")',
     C2: 'url("https://i.imgur.com/b9NqDc8.png")',
+    C0V: 'url("https://i.imgur.com/YUJcERD.png")',
+    C1V: 'url("https://i.imgur.com/P798N8N.png")',
+    C2V: 'url("https://i.imgur.com/qjqOxli.png")',
+    //submarine
     S0: 'url("https://i.imgur.com/vjzvQlF.png")',
     S1: 'url("https://i.imgur.com/qdEVwGb.png")',
     S2: 'url("https://i.imgur.com/GJIHDNv.png")',
-    D0: 'url("https://i.imgur.com/EXshJ9V.png")',
-    D1: 'url("https://i.imgur.com/pHeIkOj.png")'
+    S0V: 'url("https://i.imgur.com/tVLMiBR.png")',
+    S1V: 'url("https://i.imgur.com/DUsWCV7.png")',
+    S2V: 'url("https://i.imgur.com/Z02Onos.png")',
+    //destroyer
+    D0: 'url("https://i.imgur.com/9yJ3PdZ.png")',
+    D1: 'url("https://i.imgur.com/qi73pUy.png")',
+    D0V: 'url("https://i.imgur.com/qnJFouc.png")',
+    D1V: 'url("https://i.imgur.com/21Djxsu.png")'
 }
 
 /*----------------------------event listeners---------------------*/
@@ -274,7 +296,7 @@ function placePlayerShips(ship) {
     }
 } else {
     for (i=0; i<ships[ship].size; i++) {
-        boardP[(i * 10)+ (place - 100)] = ships[ship].abb + i;
+        boardP[(i * 10)+ (place - 100)] = ships[ship].abb + i + 'V';
         ships[ship].count = 1;
     }
 }} else return;
