@@ -4,6 +4,7 @@ var playerGrid = document.getElementById('playerGrid');
 var msg = document.getElementById('msg');
 var winMsg = document.getElementById('winMsg');
 var bank = document.getElementById('bank');
+var horiVert = document.getElementById('horiVert');
 var shipToPlace = '';
 var guess, coord;
 var turn = 1
@@ -12,6 +13,7 @@ var aiScore = 0;
 var goodGuess = false;
 var holder = false;
 var tries = 0;
+var horiz = true;
 var player = new Audio();
 
 var ships = {
@@ -52,17 +54,31 @@ var boardA = new Array(100).fill(0);
 var boardP = new Array(100).fill(0);
 
 var hitsA = {
-    H: 'url("https://www.caribbeannationalweekly.com/wp-content/uploads/2017/06/ornage.jpg")',
+    H: 'url("https://i.imgur.com/QLotCpU.png")',
     M: 'url("http://www.porcelaingres.com/img/collezioni/JUST-GREY/big/just_grey_light_grey.jpg")',
+    0: 'url("https://i.imgur.com/sljAQJ1.png)'
 }
 var hitsP = {
-    H: 'url("https://www.caribbeannationalweekly.com/wp-content/uploads/2017/06/ornage.jpg")',
+    H: 'url("https://i.imgur.com/QLotCpU.png")',
     M: 'url("http://www.porcelaingres.com/img/collezioni/JUST-GREY/big/just_grey_light_grey.jpg")',
-    A: 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Flag_of_Afghanistan_%281880%E2%80%931901%29.svg/2000px-Flag_of_Afghanistan_%281880%E2%80%931901%29.svg.png")',
-    B: 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Flag_of_Afghanistan_%281880%E2%80%931901%29.svg/2000px-Flag_of_Afghanistan_%281880%E2%80%931901%29.svg.png")',
-    C: 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Flag_of_Afghanistan_%281880%E2%80%931901%29.svg/2000px-Flag_of_Afghanistan_%281880%E2%80%931901%29.svg.png")',
-    S: 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Flag_of_Afghanistan_%281880%E2%80%931901%29.svg/2000px-Flag_of_Afghanistan_%281880%E2%80%931901%29.svg.png")',
-    D: 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Flag_of_Afghanistan_%281880%E2%80%931901%29.svg/2000px-Flag_of_Afghanistan_%281880%E2%80%931901%29.svg.png")'
+    0: 'url("https://i.imgur.com/sljAQJ1.png)',
+    A0: 'url("https://i.imgur.com/6dK6uJh.png")',
+    A1: 'url("https://i.imgur.com/Rn6DeJm.png")',
+    A2: 'url("https://i.imgur.com/z9ZEWk8.png")',
+    A3: 'url("https://i.imgur.com/DzYdHpy.png")',
+    A4: 'url("https://i.imgur.com/klA39sv.png")',
+    B0: 'url("https://i.imgur.com/0LWdSN8.png")',
+    B1: 'url("https://i.imgur.com/6Eduamo.png")',
+    B2: 'url("https://i.imgur.com/B3mxgyv.png")',
+    B3: 'url("https://i.imgur.com/Yk8Yxpk.png")',
+    C0: 'url("https://i.imgur.com/wg6rjF9.png")',
+    C1: 'url("https://i.imgur.com/0BIzrkg.png")',
+    C2: 'url("https://i.imgur.com/b9NqDc8.png")',
+    S0: 'url("https://i.imgur.com/vjzvQlF.png")',
+    S1: 'url("https://i.imgur.com/qdEVwGb.png")',
+    S2: 'url("https://i.imgur.com/GJIHDNv.png")',
+    D0: 'url("https://i.imgur.com/EXshJ9V.png")',
+    D1: 'url("https://i.imgur.com/pHeIkOj.png")'
 }
 
 /*event listeners*/
@@ -85,6 +101,15 @@ playerGrid.addEventListener('click', function(e){
 bank.addEventListener('click', function(e){
     shipToPlace = e.target.id;
 })
+
+horiVert.addEventListener('click', function(e){
+    if (e.target.innerText === 'Verticle') {
+        horiz = false;
+    } else if (e.target.innerText === 'Horizontal') {
+        horiz = true;
+    }
+})
+
 /*AI*/
 
 function guessCoord() {
@@ -102,14 +127,19 @@ function guessCoord() {
 /*functions*/
 function checkHit(board) {
     console.log(coord)
-    switch(board[coord]) {
+    switch(board[coord].toString().charAt(0)) {
         case 'H':
             goodGuess = false;
+            tries = 0;
             guessCoord();
         case 'M':
             if (turn === 1)break;
-            if (turn === (-1)) guessCoord();
-        case 0:
+            if (turn === (-1)) {
+                goodGuess = false;
+                tries = 0;
+                guessCoord();
+            }
+        case '0':
             board[coord] = 'M';
             turn *= (-1)
             goodGuess = false;
@@ -120,7 +150,6 @@ function checkHit(board) {
             turn *= (-1)
             goodGuess = true;
             tries += 1
-
             if (checkSink('A', board)) {
                 break} else {
                     msg.innerHTML =`You sank the aircraft carrier`;
@@ -202,9 +231,15 @@ function checkHit(board) {
 }
 
 function placePlayerShips(ship) {
+    if(horiz === true){
     for (i = 0; i < ships[ship].size; i++) {
-        boardP[i + (place - 100)] = ships[ship].abb;
+        boardP[i + (place - 100)] = ships[ship].abb + i;
     }
+} else {
+    for (i=0; i<ships[ship].size; i++) {
+        boardP[(i * 10)+ (place - 100)] = ships[ship].abb + i;
+    }
+}
     render();
 }
 
@@ -230,7 +265,7 @@ function render() {
 
 function checkSink(type, board) {
     return board.some(function (val) {
-        return val === type;
+        return val.toString().charAt(0) === type;
     })
 }
 
