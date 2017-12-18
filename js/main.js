@@ -55,12 +55,12 @@ var boardP = new Array(100).fill(0);
 
 var hitsA = {
     H: 'url("https://i.imgur.com/QLotCpU.png")',
-    M: 'url("http://www.porcelaingres.com/img/collezioni/JUST-GREY/big/just_grey_light_grey.jpg")',
+    M: 'url("https://i.imgur.com/DtyBdAn.png")',
     0: 'url("https://i.imgur.com/sljAQJ1.png)'
 }
 var hitsP = {
     H: 'url("https://i.imgur.com/QLotCpU.png")',
-    M: 'url("http://www.porcelaingres.com/img/collezioni/JUST-GREY/big/just_grey_light_grey.jpg")',
+    M: 'url("https://i.imgur.com/DtyBdAn.png")',
     0: 'url("https://i.imgur.com/sljAQJ1.png)',
     A0: 'url("https://i.imgur.com/6dK6uJh.png")',
     A1: 'url("https://i.imgur.com/Rn6DeJm.png")',
@@ -121,6 +121,32 @@ function guessCoord() {
         guess = coord;
     }
     checkHit(boardP);
+    render();
+}
+
+function hideShips() {
+    coord = Math.floor(Math.random() * 100);
+    placeAIShips('aircraft-carrier', coord);
+    coord = Math.floor(Math.random() * 100);
+    placeAIShips('battleship', coord);
+    coord = Math.floor(Math.random() * 100);
+    placeAIShips('cruiser', coord);
+    coord = Math.floor(Math.random() * 100);
+    placeAIShips('submarine', coord);
+    coord = Math.floor(Math.random() * 100);
+    placeAIShips('destroyer', coord);
+}
+
+function placeAIShips(ship) {
+    if(horiz === true){
+    for (i = 0; i < ships[ship].size; i++) {
+        boardA[i + (coord)] = ships[ship].abb + i;
+    }
+} else {
+    for (i=0; i<ships[ship].size; i++) {
+        boardA[(i * 10)+ (coord)] = ships[ship].abb + i;
+    }
+}
     render();
 }
 
