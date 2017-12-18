@@ -15,8 +15,8 @@ var horiz = true;
 var player = new Audio();
 
 var ships = {
-    'aircraft-carrier': {
-        name: 'aircraft-carrier',
+    'aircraftCarrier': {
+        name: 'aircraftCarrier',
         abb: 'A',
         size: 5,
         sound: 'placeholder',
@@ -51,7 +51,6 @@ var ships = {
         count: 0
     }
 }
-
 var boardA = new Array(100).fill(0);
 
 var boardP = new Array(100).fill(0);
@@ -109,12 +108,14 @@ var hitsP = {
 /*----------------------------event listeners---------------------*/
 
 opponentGrid.addEventListener('click', function(e){
+    if (start()) {
     coord = e.target.id;
     holder = goodGuess;
     checkHit(boardA);
     render();
     goodGuess = holder;
     checkTurn();
+    } else return;
 });
 
 playerGrid.addEventListener('click', function(e){
@@ -159,19 +160,10 @@ function hideShips() {
         if (boardA[coord] === 0) {
             placeAIShips(ships[key].name, coord);
         } else {
+            boardA = new Array(100).fill(0);
             hideShips();
         }
     }
-    // coord = Math.floor(Math.random() * (100 - 5));
-    // placeAIShips('aircraft-carrier', coord);
-    // coord = Math.floor(Math.random() * (100 - 4));
-    // placeAIShips('battleship', coord);
-    // coord = Math.floor(Math.random() * (100 - 3));
-    // placeAIShips('cruiser', coord);
-    // coord = Math.floor(Math.random() * (100 - 3));
-    // placeAIShips('submarine', coord);
-    // coord = Math.floor(Math.random() * (100 - 2));
-    // placeAIShips('destroyer', coord);
 }
 
 function placeAIShips(ship, coord) {
@@ -342,6 +334,18 @@ function playerOrAI() {
         return 'You';
     } else {
         return 'AI'
+    }
+}
+
+function start() {
+    var x = 0;
+    for (var key in ships) {
+        x += ships[key].count;
+    }
+    if (x === 5) {
+        return true;
+    } else {
+        return false;
     }
 }
 
