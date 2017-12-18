@@ -154,19 +154,27 @@ function guessCoord() {
 }
 
 function hideShips() {
-    coord = Math.floor(Math.random() * (100 - 5));
-    placeAIShips('aircraft-carrier', coord);
-    coord = Math.floor(Math.random() * (100 - 4));
-    placeAIShips('battleship', coord);
-    coord = Math.floor(Math.random() * (100 - 3));
-    placeAIShips('cruiser', coord);
-    coord = Math.floor(Math.random() * (100 - 3));
-    placeAIShips('submarine', coord);
-    coord = Math.floor(Math.random() * (100 - 2));
-    placeAIShips('destroyer', coord);
+    for (var key in ships) {
+        coord = Math.floor(Math.random() * (100 -(ships[key].size)))
+        if (boardA[coord] === 0) {
+            placeAIShips(ships[key].name, coord);
+        } else {
+            hideShips();
+        }
+    }
+    // coord = Math.floor(Math.random() * (100 - 5));
+    // placeAIShips('aircraft-carrier', coord);
+    // coord = Math.floor(Math.random() * (100 - 4));
+    // placeAIShips('battleship', coord);
+    // coord = Math.floor(Math.random() * (100 - 3));
+    // placeAIShips('cruiser', coord);
+    // coord = Math.floor(Math.random() * (100 - 3));
+    // placeAIShips('submarine', coord);
+    // coord = Math.floor(Math.random() * (100 - 2));
+    // placeAIShips('destroyer', coord);
 }
 
-function placeAIShips(ship) {
+function placeAIShips(ship, coord) {
     if(horiz === true){
     for (i = 0; i < ships[ship].size; i++) {
         boardA[i + (coord)] = ships[ship].abb + i;
