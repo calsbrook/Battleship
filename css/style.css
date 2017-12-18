@@ -31,9 +31,10 @@ ul {
 
 li {
     list-style-type: none;
-    border: 1px black solid;
+    border: 1px darkSlateGrey solid;
     background-color: cyan;
     cursor: pointer;
+    padding: 2px;
 }
 
 #opponentGrid td:hover {

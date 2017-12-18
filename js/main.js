@@ -21,31 +21,36 @@ var ships = {
         name: 'aircraft-carrier',
         abb: 'A',
         size: 5,
-        sound: 'placeholder'
+        sound: 'placeholder',
+        count: 0
     },
     battleship: {
         name: 'battleship',
         abb: 'B',
         size: 4,
-        sound: 'placeholder'
+        sound: 'placeholder',
+        count: 0
     },
     cruiser: {
         name: 'cruiser',
         abb: 'C',
         size: 3,
-        sound: 'placeholder'
+        sound: 'placeholder',
+        count: 0
     },
     submarine: {
         name: 'submarine',
         abb: 'S',
         size: 3,
-        sound: 'placeholder'
+        sound: 'placeholder',
+        count: 0
     },
     destroyer: {
         name: 'destroyer',
         abb: 'D',
         size: 2,
-        sound: 'placeholder'
+        sound: 'placeholder',
+        count: 0
     }
 }
 
@@ -107,6 +112,10 @@ horiVert.addEventListener('click', function(e){
         horiz = false;
     } else if (e.target.innerText === 'Horizontal') {
         horiz = true;
+    } else if (e.target.innerText === 'Place AI Ships') {
+        hideShips();
+    } else if (e.target.innerText === 'Reset') {
+        init();
     }
 })
 
@@ -257,15 +266,18 @@ function checkHit(board) {
 }
 
 function placePlayerShips(ship) {
+    if(ships[ship].count === 0) {
     if(horiz === true){
     for (i = 0; i < ships[ship].size; i++) {
         boardP[i + (place - 100)] = ships[ship].abb + i;
+        ships[ship].count = 1;
     }
 } else {
     for (i=0; i<ships[ship].size; i++) {
         boardP[(i * 10)+ (place - 100)] = ships[ship].abb + i;
+        ships[ship].count = 1;
     }
-}
+}} else return;
     render();
 }
 
@@ -307,6 +319,9 @@ function init() {
     boardP = new Array(100).fill(0);
     playerScore = aiScore = 0;
     turn = 1;
+    for (const ship in ships) {
+        ships[ship].count = 0;
+    }
     player.pause();
     render();
 }
