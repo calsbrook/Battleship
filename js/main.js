@@ -15,6 +15,7 @@ var horiz = true;
 var unplaced = true;
 var player = new Audio();
 var north = south = east = west = true;
+var dir = 4;
 
 var ships = {
     'aircraftCarrier': {
@@ -143,26 +144,40 @@ horiVert.addEventListener('click', function(e){
 /*--------------------------AI----------------------------*/
 
 function guessCoord() {
+    console.log(dir)
     if (goodGuess) {
-        coord = guess + tries;
+        switch(true) {
+            case east:
+                coord = guess + tries;
+                checkHit(boardP);
+                break;
+            case west:
+                coord = guess - tries;
+                checkHit(boardP)
+                break;
+            case north:
+                coord = guess + (10 * tries);
+                checkHit(boardP);
+                break;
+            case south:
+                coord = guess - (10 * tries);
+                checkHit(boardP);
+                break;
+            default:
+                break;
+        }
     } else {
         tries = 0
         coord = Math.floor(Math.random() * 100);
         guess = coord;
+        checkHit(boardP);
     }
-    checkHit(boardP);
     render();
-}
-
-function checkAI() {
-    if (turn === -1) {
-        console.log('stuff');
-    }
 }
 
 function hideShips() {
     for (var key in ships) {
-        coord = Math.floor(Math.random() * (100 -(ships[key].size)))
+        coord = Math.floor(Math.random() * (100 - (ships[key].size)))
         if (boardA[coord] === 0) {
             placeAIShips(ships[key].name, coord);
         } else {
@@ -185,30 +200,52 @@ function placeAIShips(ship, coord) {
     render();
 }
 
+function changeDirection(){
+    if (turn === -1 && goodGuess) {
+        if(dir === 4) {
+            east = false;
+        } else if (dir === 3) {
+            west = false;
+        } else if (dir === 2) {
+            north = false;
+        } else if (dir ===1) {
+            south = false;
+        }
+    dir -= 1;
+}}
+
 /*-----------------------functions---------------------------------*/
-function checkHit(board, dir) {
+function checkHit(board) {
     if (turn === 0) return;
     switch(board[coord].toString().charAt(0)) {
         case 'H':
-            goodGuess = false;
-            tries = 0;
+            if (turn === -1 && goodGuess){
+            changeDirection();
+            tries = 1;
             guessCoord();
+            } else if (turn === -1) {
+                guessCoord();
+            } else break;
         case 'M':
             if (turn === 1)break;
-            if (turn === (-1)) {
-                goodGuess = false;
-                tries = 0;
+            if (turn === (-1) && goodGuess) {
+                changeDirection();
+                tries = 1;
                 guessCoord();
             }
         case '0':
             board[coord] = 'M';
-            turn *= (-1)
-            goodGuess = false;
+            if (turn === (-1)) {
+            changeDirection();
+            tries = 1;
+            }
+            turn *= (-1);
             break;
         case 'A': //aircraft carrier
             hit(board, coord);
             if (checkSink('A', board)) {
                 break} else {
+                    if(turn=== (1)) aiReset();
                     msg.innerHTML =`${playerOrAI()} sank an aircraft carrier`;
                     setTimeout(function() {
                         msg.innerHTML = '';
@@ -219,16 +256,19 @@ function checkHit(board, dir) {
             hit(board, coord);
             if (checkSink('B', board)) {
                 break} else {
+                    if(turn=== (1)) aiReset();
                     msg.innerHTML =`${playerOrAI()} sank a battleship`;
                     setTimeout(function() {
                         msg.innerHTML = '';
                     },3000)
+                    
                 }
             break;
         case 'C': //cruiser
             hit(board, coord);
             if (checkSink('C',board)) {
                 break} else {
+                    if(turn=== (1)) aiReset();
                     msg.innerHTML =`${playerOrAI()} sank a cruiser`;
                     setTimeout(function() {
                         msg.innerHTML = '';
@@ -239,6 +279,7 @@ function checkHit(board, dir) {
             hit(board, coord);
             if (checkSink('S', board)) {
                 break} else {
+                    if(turn=== (1)) aiReset();
                     msg.innerHTML =`${playerOrAI()} sank a submarine`;
                     setTimeout(function() {
                         msg.innerHTML = '';
@@ -249,6 +290,7 @@ function checkHit(board, dir) {
             hit(board, coord);
             if (checkSink('D', board)) {
                 break} else {
+                    if(turn=== (1)) aiReset();
                     msg.innerHTML =`${playerOrAI()} sank a destroyer`;
                     setTimeout(function() {
                         msg.innerHTML = '';
@@ -281,9 +323,17 @@ function placePlayerShips(ship) {
 
 function hit(board, coord) {
     board[coord] = 'H';
-    turn *= (-1)
+    if(turn === (-1)) {
     goodGuess = true;
     tries += 1
+    }
+    turn *= (-1);
+}
+
+function aiReset() {
+        north = south = east = west = true;
+        dir = 4;
+        goodGuess = false;
 }
 
 function checkWin() {
