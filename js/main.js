@@ -17,7 +17,7 @@ var north = south = east = west = true;
 var dir = 4;
 
 var ships = {
-    'aircraftCarrier': {
+    aircraftCarrier: {
         name: 'aircraftCarrier',
         abb: 'A',
         size: 5,
@@ -193,12 +193,19 @@ function guessCoord() {
 
 function hideShips() {
     for (var key in ships) {
-        coord = Math.floor(Math.random() * (100 - (ships[key].size)))
-        if (boardA[coord] === 0) {
-            placeAIShips(ships[key].name, coord);
+        spotFinder((ships[key].name))
+    }
+}
+
+function spotFinder(ship) {
+    coord = Math.floor(Math.random() * (100 - (ships[ship].size)));
+    for (i = 0; i < ships[ship].size; i++) {
+        if (boardA[coord + i] !== 0) {
+            console.log(boardA[coord + i])
+            coord = Math.floor(Math.random() * (100 - (ships[ship].size)));
+            spotFinder(ship);
         } else {
-            boardA = new Array(100).fill(0);
-            hideShips();
+            placeAIShips(ships[ship].name, coord)
         }
     }
 }
@@ -396,6 +403,7 @@ function init() {
     boardA = new Array(100).fill(0);
     boardP = new Array(100).fill(0);
     turn = 1;
+    goodGuess = false;
     for (const ship in ships) {
         ships[ship].count = 0;
     }
