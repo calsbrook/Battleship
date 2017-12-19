@@ -12,7 +12,9 @@ var goodGuess = false;
 var holder = false;
 var tries = 0;
 var horiz = true;
+var unplaced = true;
 var player = new Audio();
+var north = south = east = west = true;
 
 var ships = {
     'aircraftCarrier': {
@@ -133,8 +135,6 @@ horiVert.addEventListener('click', function(e){
         horiz = false;
     } else if (e.target.innerText === 'Horizontal') {
         horiz = true;
-    } else if (e.target.innerText === 'Place AI Ships') {
-        hideShips();
     } else if (e.target.innerText === 'Reset') {
         init();
     }
@@ -152,6 +152,12 @@ function guessCoord() {
     }
     checkHit(boardP);
     render();
+}
+
+function checkAI() {
+    if (turn === -1) {
+        console.log('stuff');
+    }
 }
 
 function hideShips() {
@@ -180,7 +186,7 @@ function placeAIShips(ship, coord) {
 }
 
 /*-----------------------functions---------------------------------*/
-function checkHit(board) {
+function checkHit(board, dir) {
     if (turn === 0) return;
     switch(board[coord].toString().charAt(0)) {
         case 'H':
@@ -267,6 +273,10 @@ function placePlayerShips(ship) {
     }
 }} else return;
     render();
+    if (start() && unplaced) {
+        unplaced = false;
+        hideShips();
+    }
 }
 
 function hit(board, coord) {
@@ -317,7 +327,8 @@ function init() {
         ships[ship].count = 0;
     }
     winMsg.innerText = '';
-    player.pause();
+    north = south = east = west = true;
+    player = new Audio();
     render();
 }
 

@@ -1,7 +1,16 @@
+* {
+    font-family: 'Russo One', sans-serif;
+}
+
 table {
     border: 1px black solid;
     border-collapse: collapse;
     margin: auto;
+}
+
+body {
+    background-image: url("https://vignette.wikia.nocookie.net/althistory/images/c/c3/Flag_of_the_Soviet_Union.png/revision/latest?cb=20150709212906");
+    background-color: #BC261A;
 }
 
 h1 {
