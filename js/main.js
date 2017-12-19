@@ -9,7 +9,6 @@ var shipToPlace = '';
 var guess, coord;
 var turn = 1
 var goodGuess = false;
-var holder = false;
 var tries = 0;
 var horiz = true;
 var unplaced = true;
@@ -113,10 +112,8 @@ var hitsP = {
 opponentGrid.addEventListener('click', function(e){
     if (start()) {
     coord = e.target.id;
-    holder = goodGuess;
     checkHit(boardA);
     render();
-    goodGuess = holder;
     checkTurn();
     } else return;
 });
@@ -144,24 +141,43 @@ horiVert.addEventListener('click', function(e){
 /*--------------------------AI----------------------------*/
 
 function guessCoord() {
-    console.log(dir)
     if (goodGuess) {
         switch(true) {
             case east:
                 coord = guess + tries;
+                if (onBoard(coord)) {
                 checkHit(boardP);
+                } else {
+                    changeDirection();
+                    guessCoord();
+                }
                 break;
             case west:
                 coord = guess - tries;
-                checkHit(boardP)
+                if (onBoard(coord)) {
+                    checkHit(boardP);
+                    } else {
+                        changeDirection();
+                        guessCoord();
+                    }
                 break;
             case north:
                 coord = guess + (10 * tries);
-                checkHit(boardP);
+                if (onBoard(coord)) {
+                    checkHit(boardP);
+                    } else {
+                        changeDirection();
+                        guessCoord();
+                    }
                 break;
             case south:
                 coord = guess - (10 * tries);
-                checkHit(boardP);
+                if (onBoard(coord)) {
+                    checkHit(boardP);
+                    } else {
+                        changeDirection();
+                        guessCoord();
+                    }
                 break;
             default:
                 break;
@@ -210,10 +226,17 @@ function changeDirection(){
             north = false;
         } else if (dir ===1) {
             south = false;
+        } else if (dir <= 0) {
+            aiReset();
         }
     dir -= 1;
 }}
 
+function onBoard(coord) {
+    if (coord >= 100 || coord < 0) {
+        return false;
+    } else return true;
+}
 /*-----------------------functions---------------------------------*/
 function checkHit(board) {
     if (turn === 0) return;
@@ -379,6 +402,7 @@ function init() {
     winMsg.innerText = '';
     north = south = east = west = true;
     player = new Audio();
+    unplaced = true;
     render();
 }
 
