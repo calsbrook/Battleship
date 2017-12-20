@@ -113,7 +113,10 @@ var hitsP = {
 opponentGrid.addEventListener('click', function(e){
     if (start()) {
     coord = e.target.id;
-    checkHit(aiBoard);
+    console.log(coord)
+    var x = parseInt(coord[1]);
+    var y = parseInt(coord[0]);
+    checkHit(aiBoard, x, y);
     render();
     guessCoord();
     } else return;
@@ -148,7 +151,7 @@ function guessCoord() {
             case east:
                 coord = guess + tries;
                 if (onBoard(coord)) {
-                checkHit(playerBoard);
+                checkHit(playerBoard, x, y);
                 } else {
                     changeDirection();
                     guessCoord();
@@ -157,7 +160,7 @@ function guessCoord() {
             case west:
                 coord = guess - tries;
                 if (onBoard(coord)) {
-                    checkHit(playerBoard);
+                    checkHit(playerBoard, x, y);
                     } else {
                         changeDirection();
                         guessCoord();
@@ -166,7 +169,7 @@ function guessCoord() {
             case north:
                 coord = guess + (10 * tries);
                 if (onBoard(coord)) {
-                    checkHit(playerBoard);
+                    checkHit(playerBoard, x, y);
                     } else {
                         changeDirection();
                         guessCoord();
@@ -175,7 +178,7 @@ function guessCoord() {
             case south:
                 coord = guess - (10 * tries);
                 if (onBoard(coord)) {
-                    checkHit(playerBoard);
+                    checkHit(playerBoard, x, y);
                     } else {
                         changeDirection();
                         guessCoord();
@@ -186,9 +189,9 @@ function guessCoord() {
         }
     } else {
         tries = 0
-        coord = Math.floor(Math.random() * 100);
-        guess = coord;
-        checkHit(playerBoard);
+        var x = Math.floor(Math.random() * 10)
+        var y = Math.floor(Math.random() * 10)
+        checkHit(playerBoard, x, y);
     }
     render();
 }
@@ -271,15 +274,14 @@ function changeDirection(){
 //     } else return true;
 // }
 /*-----------------------functions---------------------------------*/
-function checkHit(board) {
-    console.log(turn)
+function checkHit(board, x, y) {
     if (turn === 0) return;
-    switch(board[coord].toString().charAt(0)) {
+    switch(board[y][x].toString().charAt(0)) {
         case 'H':
             if (turn === -1 && goodGuess){
-            changeDirection();
-            tries = 1;
-            guessCoord();
+                changeDirection();
+                tries = 1;
+                guessCoord();
             } else if (turn === -1) {
                 guessCoord();
             } else break;
@@ -293,7 +295,7 @@ function checkHit(board) {
                 guessCoord();
             }
         case '0':
-            board[coord] = 'M';
+            board[y][x] = 'M';
             if (turn === (-1) && goodGuess) {
             changeDirection();
             tries = 1;
@@ -301,7 +303,7 @@ function checkHit(board) {
             turn *= (-1);
             break;
         case 'A': //aircraft carrier
-            hit(board, coord);
+            hit(board, x, y);
             if (checkSink('A', board)) {
                 break} else {
                     if(turn=== (1)) aiReset();
@@ -312,7 +314,7 @@ function checkHit(board) {
                 }
             break;
         case 'B': //battleship
-            hit(board, coord);
+            hit(board, x, y);
             if (checkSink('B', board)) {
                 break} else {
                     if(turn=== (1)) aiReset();
@@ -324,7 +326,7 @@ function checkHit(board) {
                 }
             break;
         case 'C': //cruiser
-            hit(board, coord);
+            hit(board, x, y);
             if (checkSink('C',board)) {
                 break} else {
                     if(turn=== (1)) aiReset();
@@ -335,7 +337,7 @@ function checkHit(board) {
                 }
             break;
         case 'S': //submarine
-            hit(board, coord);
+            hit(board, x, y);
             if (checkSink('S', board)) {
                 break} else {
                     if(turn=== (1)) aiReset();
@@ -346,7 +348,7 @@ function checkHit(board) {
                 }
             break;
         case 'D': //destroyer
-            hit(board, coord);
+            hit(board, x, y);
             if (checkSink('D', board)) {
                 break} else {
                     if(turn=== (1)) aiReset();
@@ -357,7 +359,7 @@ function checkHit(board) {
                 }
             break;
     }
-    callback(checkWin);
+    //callback(checkWin);
 }
 
 function placePlayerShip(ship, place) {
@@ -413,8 +415,8 @@ function isClear(board, ship, x, y) {
 }
 
 
-function hit(board, coord) {
-    board[coord] = 'H';
+function hit(board, x, y) {
+    board[y][x] = 'H';
     if(turn === (-1)) {
         goodGuess = true;
         tries += 1
@@ -457,9 +459,12 @@ function checkSink(type, board) {
 }
 
 function updateBoard() {
-    for (var i = 0; i < aiBoard.length; i++) {
-        for(var j = 0; j < aiBoard[i].length; j++) {
+    for (var i = 0; i < 10; i++) {
+        for(var j = 0; j < 10; j++) {
             var aiIndex = i * 10 + j;
+            if(aiIndex < 10) {
+                aiIndex = '0' + aiIndex
+            }
             var playerIndex = i * 10 + j + 100;
             document.getElementById(aiIndex).style.backgroundImage = hitsA[aiBoard[i][j]];
             document.getElementById((playerIndex)).style.backgroundImage = hitsP[playerBoard[i][j]];
