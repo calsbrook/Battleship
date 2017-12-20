@@ -194,36 +194,60 @@ function guessCoord() {
 }
 
 function hideShips() {
-    horiz = true;
     for (var key in ships) {
-        spotFinder((ships[key].name))
+        placeAIShips((ships[key].name))
     }
 }
 
-function spotFinder(ship) {
-    coord = Math.floor(Math.random() * (100 - (ships[ship].size)));
-    for (i = 0; i < ships[ship].size; i++) {
-        if (aiBoard[coord + i] !== 0) {
-            coord = Math.floor(Math.random() * (100 - (ships[ship].size)));
-            spotFinder(ship);
-        } else {
-            placeAIShips(ships[ship].name, coord)
+// function spotFinder(ship) {
+//     coord = Math.floor(Math.random() * (100 - (ships[ship].size)));
+//     for (i = 0; i < ships[ship].size; i++) {
+//         if (aiBoard[coord + i] !== 0) {
+//             coord = Math.floor(Math.random() * (100 - (ships[ship].size)));
+//             spotFinder(ship);
+//         } else {
+//             placeAIShips(ships[ship].name)
+//         }
+//     }
+// }
+
+function placeAIShips(ship) {
+    var x = Math.floor(Math.random() * 10);
+    var y = Math.floor(Math.random() * 10);
+    var coin = Math.floor(Math.random() * 2)
+    if (coin > 0) {
+        horiz = true;
+    }else {
+        horiz = false;
+    }
+    if(ships[ship].count === 1 && isClear(aiBoard, ship, x, y)) {
+        for (var i = 0; i < ships[ship].size; i++) {
+            if(horiz === true)
+            {
+                aiBoard[y][x + i] = ships[ship].abb + i;
+                ships[ship].count = 1;
+            } else {
+                aiBoard[y+i][x] = ships[ship].abb + i + 'V';
+                ships[ship].count = 1;
+            }
         }
+    } else {
+        placeAIShips(ship);
     }
 }
 
-function placeAIShips(ship, coord) {
-    if(horiz === true){
-    for (i = 0; i < ships[ship].size; i++) {
-        aiBoard[i + (coord)] = ships[ship].abb + i;
-    }
-} else {
-    for (i=0; i<ships[ship].size; i++) {
-        aiBoard[(i * 10)+ (coord)] = ships[ship].abb + i;
-    }
-}
-    render();
-}
+// function placeAIShips(ship, coord) {
+//     if(horiz === true){
+//     for (i = 0; i < ships[ship].size; i++) {
+//         aiBoard[i + (coord)] = ships[ship].abb + i;
+//     }
+// } else {
+//     for (i=0; i<ships[ship].size; i++) {
+//         aiBoard[(i * 10)+ (coord)] = ships[ship].abb + i;
+//     }
+// }
+//     render();
+// }
 
 function changeDirection(){
     if (turn === -1 && goodGuess) {
@@ -241,11 +265,11 @@ function changeDirection(){
     dir -= 1;
 }}
 
-function onBoard(coord) {
-    if (coord >= 100 || coord < 0) {
-        return false;
-    } else return true;
-}
+// function onBoard(coord) {
+//     if (coord >= 100 || coord < 0) {
+//         return false;
+//     } else return true;
+// }
 /*-----------------------functions---------------------------------*/
 function checkHit(board) {
     console.log(turn)
@@ -350,7 +374,10 @@ function placePlayerShip(ship, place) {
                 ships[ship].count = 1;
             }
         }
-    }return;
+    }if (start() && unplaced) {
+        unplaced = false;
+        hideShips();
+    }
 }
 //     if(ships[ship].count === 0) {
 //     if(horiz === true){
