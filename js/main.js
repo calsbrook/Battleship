@@ -232,19 +232,6 @@ function placeAIShips(ship) {
     }
 }
 
-// function placeAIShips(ship, coord) {
-//     if(horiz === true){
-//     for (i = 0; i < ships[ship].size; i++) {
-//         aiBoard[i + (coord)] = ships[ship].abb + i;
-//     }
-// } else {
-//     for (i=0; i<ships[ship].size; i++) {
-//         aiBoard[(i * 10)+ (coord)] = ships[ship].abb + i;
-//     }
-// }
-//     render();
-// }
-
 function changeDirection(){
     if (turn === -1 && goodGuess) {
         if(dir === 4) {
@@ -300,11 +287,7 @@ function checkHit(board, x, y) {
             if (!checkSink('A', board)) {
                 break
                 } else {
-                    if(turn === (1)) aiReset();
-                    msg.innerHTML =`${playerOrAI()} sank an aircraft carrier comrade`;
-                    setTimeout(function() {
-                        msg.innerHTML = '';
-                    },3000)
+                    message(board, 'aircraft carrier')
                 }
             break;
         case 'B': //battleship
@@ -312,11 +295,7 @@ function checkHit(board, x, y) {
             if (!checkSink('B', board)) {
                 break;
                 } else {
-                    if(turn=== (1)) aiReset();
-                    msg.innerHTML =`${playerOrAI()} sank a battleship comrade`;
-                    setTimeout(function() {
-                        msg.innerHTML = '';
-                    },3000)
+                    message(board, 'battleship')
                 }
             break;
         case 'C': //cruiser
@@ -324,11 +303,7 @@ function checkHit(board, x, y) {
             if (!checkSink('C', board)) {
                 break;
                 } else {
-                    if(turn=== (1)) aiReset();
-                    msg.innerHTML =`${playerOrAI()} sank a cruiser comrade`;
-                    setTimeout(function() {
-                        msg.innerHTML = '';
-                    },3000)
+                    message(board, 'cruiser')
                 }
             break;
         case 'S': //submarine
@@ -336,11 +311,7 @@ function checkHit(board, x, y) {
             if (!checkSink('S', board)) {
                 break;
                 } else {
-                    if(turn=== (1)) aiReset();
-                    msg.innerHTML =`${playerOrAI()} sank a submarine comrade`;
-                    setTimeout(function() {
-                        msg.innerHTML = '';
-                    },3000)
+                    message(board, 'submarine')
                 }
             break;
         case 'D': //destroyer
@@ -348,15 +319,23 @@ function checkHit(board, x, y) {
             if (!checkSink('D', board)) {
                 break
                 } else {
-                    if(turn=== (1)) aiReset();
-                    msg.innerHTML =`${playerOrAI()} sank a destroyer comrade`;
-                    setTimeout(function() {
-                        msg.innerHTML = '';
-                    },3000)
+                    message(board, 'destroyer')
                 }
             break;
     }
-    //callback(checkWin);
+    callback(checkWin);
+}
+
+function message(board, ship) {
+    if (board === aiBoard){
+        msg.innerHTML = `We sank their ${ship} comrade!`;
+    } else if(board === playerBoard) {
+        msg.innerHTML = `The capitalists have sunk our ${ship} comrade!`;
+        aiReset();
+    }
+    setTimeout(function() {
+        msg.innerHTML = '';
+    }, 3000)
 }
 
 function placePlayerShip(ship, place) {
@@ -414,16 +393,16 @@ function callback(cb) {
     return cb();
 }
 function checkWin() {
-    if(!checkSink('A', aiBoard) && !checkSink('B', aiBoard) && 
-    !checkSink('C', aiBoard) && !checkSink('S', aiBoard) &&
-    !checkSink('D', aiBoard)) {
+    if(checkSink('A', aiBoard) && checkSink('B', aiBoard) && 
+    checkSink('C', aiBoard) && checkSink('S', aiBoard) &&
+    checkSink('D', aiBoard)) {
         winMsg.innerHTML = 'YOU WON';
-        player.src = "http://k003.kiwi6.com/hotlink/9mtc9dy3dq/Soviet_Union_National_Anthem_8-bit_Remix_25Osc_.mp3";
+        player.src = "https://k003.kiwi6.com/hotlink/9mtc9dy3dq/Soviet_Union_National_Anthem_8-bit_Remix_25Osc_.mp3";
         player.play();
         turn = 0;
-    } else if (!checkSink('A', playerBoard) && !checkSink('B', playerBoard) && 
-    !checkSink('C', playerBoard) && !checkSink('S', playerBoard) &&
-    !checkSink('D', playerBoard)) {
+    } else if (checkSink('A', playerBoard) && checkSink('B', playerBoard) && 
+    checkSink('C', playerBoard) && checkSink('S', playerBoard) &&
+    checkSink('D', playerBoard)) {
         winMsg.innerHTML = 'This AI is a couple days old and beat you...';
         turn = 0
     }
@@ -432,15 +411,6 @@ function checkWin() {
 function render() {
     updateBoard();
 }
-
-// function checkSink(type, board) {
-//     for(var i = 0; i < 10; i++) {
-//         board[i].some(function (val) {
-//             if(val.toString().charAt(0) !== type) return false;
-//         })
-//     }
-//     return true;
-// }
 
 function checkSink(type, board) {
     return !board.some(function(row) {
@@ -484,7 +454,7 @@ function init() {
     winMsg.innerText = '';
     north = south = east = west = true;
     player.pause();
-    sfx.src = "http://k003.kiwi6.com/hotlink/ioc4dg2gb4/waterDrop.wav";
+    sfx.src = "https://k003.kiwi6.com/hotlink/ioc4dg2gb4/waterDrop.wav";
     unplaced = true;
     render();
 }
