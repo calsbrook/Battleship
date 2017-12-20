@@ -17,6 +17,9 @@ var sfx = new Audio();
 var north = south = east = west = true;
 var dir = 4;
 
+var playerBoard = createEmptyBoard();
+var aiBoard = createEmptyBoard();
+
 var ships = {
     aircraftCarrier: {
         name: 'aircraftCarrier',
@@ -54,9 +57,6 @@ var ships = {
         count: 0
     }
 }
-var boardA = new Array(100).fill(0);
-
-var boardP = new Array(100).fill(0);
 
 var hitsA = {
     H: 'url("https://i.imgur.com/QLotCpU.png")',
@@ -113,15 +113,15 @@ var hitsP = {
 opponentGrid.addEventListener('click', function(e){
     if (start()) {
     coord = e.target.id;
-    checkHit(boardA);
+    checkHit(aiBoard);
     render();
     guessCoord();
     } else return;
 });
 
 playerGrid.addEventListener('click', function(e){
-    place = e.target.id;
-    placePlayerShips(shipToPlace);
+    var place = e.target.id;
+    placePlayerShip(shipToPlace, place);
     sfx.src = "http://k003.kiwi6.com/hotlink/ioc4dg2gb4/waterDrop.wav";
     sfx.play();
     render();
@@ -142,14 +142,13 @@ horiVert.addEventListener('click', function(e){
 })
 
 /*--------------------------AI----------------------------*/
-
 function guessCoord() {
     if (goodGuess) {
         switch(true) {
             case east:
                 coord = guess + tries;
                 if (onBoard(coord)) {
-                checkHit(boardP);
+                checkHit(playerBoard);
                 } else {
                     changeDirection();
                     guessCoord();
@@ -158,7 +157,7 @@ function guessCoord() {
             case west:
                 coord = guess - tries;
                 if (onBoard(coord)) {
-                    checkHit(boardP);
+                    checkHit(playerBoard);
                     } else {
                         changeDirection();
                         guessCoord();
@@ -167,7 +166,7 @@ function guessCoord() {
             case north:
                 coord = guess + (10 * tries);
                 if (onBoard(coord)) {
-                    checkHit(boardP);
+                    checkHit(playerBoard);
                     } else {
                         changeDirection();
                         guessCoord();
@@ -176,7 +175,7 @@ function guessCoord() {
             case south:
                 coord = guess - (10 * tries);
                 if (onBoard(coord)) {
-                    checkHit(boardP);
+                    checkHit(playerBoard);
                     } else {
                         changeDirection();
                         guessCoord();
@@ -189,7 +188,7 @@ function guessCoord() {
         tries = 0
         coord = Math.floor(Math.random() * 100);
         guess = coord;
-        checkHit(boardP);
+        checkHit(playerBoard);
     }
     render();
 }
@@ -204,7 +203,7 @@ function hideShips() {
 function spotFinder(ship) {
     coord = Math.floor(Math.random() * (100 - (ships[ship].size)));
     for (i = 0; i < ships[ship].size; i++) {
-        if (boardA[coord + i] !== 0) {
+        if (aiBoard[coord + i] !== 0) {
             coord = Math.floor(Math.random() * (100 - (ships[ship].size)));
             spotFinder(ship);
         } else {
@@ -216,11 +215,11 @@ function spotFinder(ship) {
 function placeAIShips(ship, coord) {
     if(horiz === true){
     for (i = 0; i < ships[ship].size; i++) {
-        boardA[i + (coord)] = ships[ship].abb + i;
+        aiBoard[i + (coord)] = ships[ship].abb + i;
     }
 } else {
     for (i=0; i<ships[ship].size; i++) {
-        boardA[(i * 10)+ (coord)] = ships[ship].abb + i;
+        aiBoard[(i * 10)+ (coord)] = ships[ship].abb + i;
     }
 }
     render();
@@ -337,61 +336,91 @@ function checkHit(board) {
     callback(checkWin);
 }
 
-function placePlayerShips(ship) {
-    if(ships[ship].count === 0) {
-    if(horiz === true){
-    for (i = 0; i < ships[ship].size; i++) {
-        boardP[i + (place - 100)] = ships[ship].abb + i;
-        ships[ship].count = 1;
-    }
-} else {
-    for (i=0; i<ships[ship].size; i++) {
-        boardP[(i * 10)+ (place - 100)] = ships[ship].abb + i + 'V';
-        ships[ship].count = 1;
-    }
-}} else return;
-    render();
-    if (start() && unplaced) {
-        unplaced = false;
-        hideShips();
-    }
+function placePlayerShip(ship, place) {
+    var x = parseInt(place[2]);
+    var y = parseInt(place[1]);
+    if(ships[ship].count === 0 && isClear(playerBoard, ship, x, y)) {
+        for (var i = 0; i < ships[ship].size; i++) {
+            if(horiz === true)
+            {
+                playerBoard[y][x + i] = ships[ship].abb + i;
+                ships[ship].count = 1;
+            } else {
+                playerBoard[y+i][x] = ships[ship].abb + i + 'V';
+                ships[ship].count = 1;
+            }
+        }
+    }return;
 }
+//     if(ships[ship].count === 0) {
+//     if(horiz === true){
+//     for (i = 0; i < ships[ship].size; i++) {
+//         playerBoard[i + (place - 100)] = ships[ship].abb + i;
+//         ships[ship].count = 1;
+//     }
+// } else {
+//     for (i=0; i<ships[ship].size; i++) {
+//         playerBoard[(i * 10)+ (place - 100)] = ships[ship].abb + i + 'V';
+//         ships[ship].count = 1;
+//     }
+// }} else return;
+//     render();
+//     if (start() && unplaced) {
+//         unplaced = false;
+//         hideShips();
+//     }
+// }
+
+function isClear(board, ship, x, y) {
+    for(var i = 0; i < ships[ship].size; i++) {
+        if(horiz) {
+            if ((x + i) >= board.length || board[y][x + i] !== 0) {
+                return false;
+            }
+        } else {
+            if ((y + i) >= board.length || board[y + i][x] !== 0) {
+                return false;
+            }
+        }
+    }return true;
+}
+
 
 function hit(board, coord) {
     board[coord] = 'H';
     if(turn === (-1)) {
-    goodGuess = true;
-    tries += 1
+        goodGuess = true;
+        tries += 1
     }
     turn *= (-1);
 }
 
 function aiReset() {
-        north = south = east = west = true;
-        dir = 4;
-        goodGuess = false;
+    north = south = east = west = true;
+    dir = 4;
+    goodGuess = false;
 }
 function callback(cb) {
     return cb();
 }
 function checkWin() {
-    if(!checkSink('A', boardA) && !checkSink('B', boardA) && 
-    !checkSink('C', boardA) && !checkSink('S', boardA) &&
-    !checkSink('D', boardA)) {
+    if(!checkSink('A', aiBoard) && !checkSink('B', aiBoard) && 
+    !checkSink('C', aiBoard) && !checkSink('S', aiBoard) &&
+    !checkSink('D', aiBoard)) {
         winMsg.innerHTML = 'YOU WON';
         player.src = "http://k003.kiwi6.com/hotlink/9mtc9dy3dq/Soviet_Union_National_Anthem_8-bit_Remix_25Osc_.mp3";
         player.play();
         turn = 0;
-    } else if (!checkSink('A', boardP) && !checkSink('B', boardP) && 
-    !checkSink('C', boardP) && !checkSink('S', boardP) &&
-    !checkSink('D', boardP)) {
+    } else if (!checkSink('A', playerBoard) && !checkSink('B', playerBoard) && 
+    !checkSink('C', playerBoard) && !checkSink('S', playerBoard) &&
+    !checkSink('D', playerBoard)) {
         winMsg.innerHTML = 'This AI is a couple days old and beat you...';
         turn = 0
     }
 }
 
 function render() {
-    arrayCallback();
+    updateBoard();
 }
 
 function checkSink(type, board) {
@@ -400,16 +429,27 @@ function checkSink(type, board) {
     })
 }
 
-function arrayCallback() {
-    for (i=0; i<boardA.length; i++) {
-        document.getElementById(i).style.backgroundImage = hitsA[boardA[i]];
-        document.getElementById((i + 100)).style.backgroundImage = hitsP[boardP[i]];
+function updateBoard() {
+    for (var i = 0; i < aiBoard.length; i++) {
+        for(var j = 0; j < aiBoard[i].length; j++) {
+            var aiIndex = i * 10 + j;
+            var playerIndex = i * 10 + j + 100;
+            document.getElementById(aiIndex).style.backgroundImage = hitsA[aiBoard[i][j]];
+            document.getElementById((playerIndex)).style.backgroundImage = hitsP[playerBoard[i][j]];
+        }
     }
 }
 
+function createEmptyBoard() {
+    var arr = new Array(10);
+    for (var i = 0; i < arr.length; i++) {
+        arr[i] = new Array(10).fill(0);
+    }return arr;
+}
+
 function init() {
-    boardA = new Array(100).fill(0);
-    boardP = new Array(100).fill(0);
+    playerBoard = createEmptyBoard();
+    aiBoard = createEmptyBoard();
     turn = 1;
     goodGuess = false;
     for (const ship in ships) {
