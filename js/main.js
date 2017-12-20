@@ -1,7 +1,7 @@
 /*------------------------vars and stuff--------------------------*/
 var opponentGrid = document.getElementById('opponentGrid');
 var playerGrid = document.getElementById('playerGrid');
-var msg = document.getElementById('msg');
+var msg = document.getElementById('speech');
 var winMsg = document.getElementById('winMsg');
 var bank = document.getElementById('bank');
 var horiVert = document.getElementById('horiVert');
@@ -249,8 +249,8 @@ function onBoard(coord) {
 }
 /*-----------------------functions---------------------------------*/
 function checkHit(board) {
+    console.log(turn)
     if (turn === 0) return;
-    console.log(board)
     switch(board[coord].toString().charAt(0)) {
         case 'H':
             if (turn === -1 && goodGuess){
@@ -282,7 +282,7 @@ function checkHit(board) {
             if (checkSink('A', board)) {
                 break} else {
                     if(turn=== (1)) aiReset();
-                    msg.innerHTML =`${playerOrAI()} sank an aircraft carrier`;
+                    msg.innerHTML =`${playerOrAI()} sank an aircraft carrier comrade`;
                     setTimeout(function() {
                         msg.innerHTML = '';
                     },3000)
@@ -293,7 +293,7 @@ function checkHit(board) {
             if (checkSink('B', board)) {
                 break} else {
                     if(turn=== (1)) aiReset();
-                    msg.innerHTML =`${playerOrAI()} sank a battleship`;
+                    msg.innerHTML =`${playerOrAI()} sank a battleship comrade`;
                     setTimeout(function() {
                         msg.innerHTML = '';
                     },3000)
@@ -305,7 +305,7 @@ function checkHit(board) {
             if (checkSink('C',board)) {
                 break} else {
                     if(turn=== (1)) aiReset();
-                    msg.innerHTML =`${playerOrAI()} sank a cruiser`;
+                    msg.innerHTML =`${playerOrAI()} sank a cruiser comrade`;
                     setTimeout(function() {
                         msg.innerHTML = '';
                     },3000)
@@ -316,7 +316,7 @@ function checkHit(board) {
             if (checkSink('S', board)) {
                 break} else {
                     if(turn=== (1)) aiReset();
-                    msg.innerHTML =`${playerOrAI()} sank a submarine`;
+                    msg.innerHTML =`${playerOrAI()} sank a submarine comrade`;
                     setTimeout(function() {
                         msg.innerHTML = '';
                     },3000)
@@ -327,7 +327,7 @@ function checkHit(board) {
             if (checkSink('D', board)) {
                 break} else {
                     if(turn=== (1)) aiReset();
-                    msg.innerHTML =`${playerOrAI()} sank a destroyer`;
+                    msg.innerHTML =`${playerOrAI()} sank a destroyer comrade`;
                     setTimeout(function() {
                         msg.innerHTML = '';
                     },3000)

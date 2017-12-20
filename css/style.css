@@ -6,8 +6,30 @@ table {
     border-collapse: collapse;
     margin: auto;
     padding-bottom: 30px;
-    padding-left: 35%;
+    padding-left: 37%;
     display: inline-block;
+}
+
+.stalin {
+    background-color: red;
+    width: 299px;
+    height: 402px;
+    position: absolute;
+    display: inline-block;
+    border: 2px solid black;
+    margin-top: 20%;
+}
+
+#speech {
+    width: 170px;
+    height: 70px;
+    background-color: white;
+    border: 1px solid darkslategrey;
+    position: absolute;
+    margin-top: 20%;
+    margin-left: 20%;
+    padding: 20px;
+    border-radius: 10px;
 }
 
 body {
@@ -40,6 +62,7 @@ td {
     position: absolute;
     align-content: right;
     margin-left: 66.66%;
+    margin-top: -50%;
 }
 ul {
     margin: auto;
