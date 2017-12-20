@@ -233,7 +233,7 @@ function placeAIShips(ship) {
 }
 
 function changeDirection(){
-    if (turn === -1 && goodGuess) {
+    if (goodGuess) {
         if(dir === 4) {
             east = false;
         } else if (dir === 3) {
@@ -258,29 +258,29 @@ function checkHit(board, x, y) {
     if (turn === 0) return;
     switch(board[y][x].toString().charAt(0)) {
         case 'H':
-            if (turn === -1 && goodGuess){
+            if (board === playerBoard && goodGuess){
                 changeDirection();
                 tries = 1;
                 guessCoord();
-            } else if (turn === -1) {
+            } else if (board === playerBoard) {
                 guessCoord();
             } else break;
         case 'M':
-            if (turn === 1)break;
-            if (turn === (-1) && goodGuess) {
+            if (board === aiBoard)break;
+            if (board === playerBoard && goodGuess) {
                 changeDirection();
                 tries = 1;
                 guessCoord();
-            } else if (turn === (-1)) {
+            } else if (board === playerBoard) {
                 guessCoord();
             }
         case '0':
             board[y][x] = 'M';
-            if (turn === (-1) && goodGuess) {
+            if (board === playerBoard && goodGuess) {
             changeDirection();
             tries = 1;
             }
-            turn *= (-1);
+            //turn *= (-1);
             break;
         case 'A': //aircraft carrier
             hit(board, x, y);
@@ -375,13 +375,13 @@ function isClear(board, ship, x, y) {
 
 function hit(board, x, y) {
     board[y][x] = 'H';
-    if(turn === (-1)) {
+    if(board === playerBoard) {
         goodGuess = true;
         tries += 1
         console.log(`tries ${tries}`)
         console.log(goodGuess)
     }
-    turn *= (-1);
+    //turn *= (-1);
 }
 
 function aiReset() {
@@ -457,22 +457,6 @@ function init() {
     sfx.src = "https://k003.kiwi6.com/hotlink/ioc4dg2gb4/waterDrop.wav";
     unplaced = true;
     render();
-}
-
-function checkTurn() {
-    if (turn === 1) {
-        return
-    } else {
-        guessCoord();
-    }
-}
-
-function playerOrAI() {
-    if (turn === (-1)) {
-        return 'You';
-    } else {
-        return 'AI'
-    }
 }
 
 function start() {
