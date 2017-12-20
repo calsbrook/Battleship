@@ -207,18 +207,6 @@ function hideShips() {
     }
 }
 
-// function spotFinder(ship) {
-//     coord = Math.floor(Math.random() * (100 - (ships[ship].size)));
-//     for (i = 0; i < ships[ship].size; i++) {
-//         if (aiBoard[coord + i] !== 0) {
-//             coord = Math.floor(Math.random() * (100 - (ships[ship].size)));
-//             spotFinder(ship);
-//         } else {
-//             placeAIShips(ships[ship].name)
-//         }
-//     }
-// }
-
 function placeAIShips(ship) {
     var x = Math.floor(Math.random() * 10);
     var y = Math.floor(Math.random() * 10);
@@ -309,9 +297,10 @@ function checkHit(board, x, y) {
             break;
         case 'A': //aircraft carrier
             hit(board, x, y);
-            if (checkSink('A', board)) {
-                break} else {
-                    if(turn=== (1)) aiReset();
+            if (!checkSink('A', board)) {
+                break
+                } else {
+                    if(turn === (1)) aiReset();
                     msg.innerHTML =`${playerOrAI()} sank an aircraft carrier comrade`;
                     setTimeout(function() {
                         msg.innerHTML = '';
@@ -320,20 +309,21 @@ function checkHit(board, x, y) {
             break;
         case 'B': //battleship
             hit(board, x, y);
-            if (checkSink('B', board)) {
-                break} else {
+            if (!checkSink('B', board)) {
+                break;
+                } else {
                     if(turn=== (1)) aiReset();
                     msg.innerHTML =`${playerOrAI()} sank a battleship comrade`;
                     setTimeout(function() {
                         msg.innerHTML = '';
                     },3000)
-                    
                 }
             break;
         case 'C': //cruiser
             hit(board, x, y);
-            if (checkSink('C',board)) {
-                break} else {
+            if (!checkSink('C', board)) {
+                break;
+                } else {
                     if(turn=== (1)) aiReset();
                     msg.innerHTML =`${playerOrAI()} sank a cruiser comrade`;
                     setTimeout(function() {
@@ -343,8 +333,9 @@ function checkHit(board, x, y) {
             break;
         case 'S': //submarine
             hit(board, x, y);
-            if (checkSink('S', board)) {
-                break} else {
+            if (!checkSink('S', board)) {
+                break;
+                } else {
                     if(turn=== (1)) aiReset();
                     msg.innerHTML =`${playerOrAI()} sank a submarine comrade`;
                     setTimeout(function() {
@@ -354,8 +345,9 @@ function checkHit(board, x, y) {
             break;
         case 'D': //destroyer
             hit(board, x, y);
-            if (checkSink('D', board)) {
-                break} else {
+            if (!checkSink('D', board)) {
+                break
+                } else {
                     if(turn=== (1)) aiReset();
                     msg.innerHTML =`${playerOrAI()} sank a destroyer comrade`;
                     setTimeout(function() {
@@ -386,24 +378,6 @@ function placePlayerShip(ship, place) {
         hideShips();
     }
 }
-//     if(ships[ship].count === 0) {
-//     if(horiz === true){
-//     for (i = 0; i < ships[ship].size; i++) {
-//         playerBoard[i + (place - 100)] = ships[ship].abb + i;
-//         ships[ship].count = 1;
-//     }
-// } else {
-//     for (i=0; i<ships[ship].size; i++) {
-//         playerBoard[(i * 10)+ (place - 100)] = ships[ship].abb + i + 'V';
-//         ships[ship].count = 1;
-//     }
-// }} else return;
-//     render();
-//     if (start() && unplaced) {
-//         unplaced = false;
-//         hideShips();
-//     }
-// }
 
 function isClear(board, ship, x, y) {
     for(var i = 0; i < ships[ship].size; i++) {
@@ -459,12 +433,23 @@ function render() {
     updateBoard();
 }
 
+// function checkSink(type, board) {
+//     for(var i = 0; i < 10; i++) {
+//         board[i].some(function (val) {
+//             if(val.toString().charAt(0) !== type) return false;
+//         })
+//     }
+//     return true;
+// }
+
 function checkSink(type, board) {
-    for(var i = 0; i < 10; i++) {
-        board.some(function (val) {
-            if(val === type) return false;
+    return !board.some(function(row) {
+        return row.some(function(loc) {
+            if (typeof loc === 'number') return false;
+            return loc.includes(type);
         })
-    }return true;
+        
+    });
 }
 
 function updateBoard() {
