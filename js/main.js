@@ -6,7 +6,7 @@ var winMsg = document.getElementById('winMsg');
 var bank = document.getElementById('bank');
 var horiVert = document.getElementById('horiVert');
 var shipToPlace = '';
-var guess, coord;
+var guessX, guessY;
 var turn = 1
 var goodGuess = false;
 var tries = 0;
@@ -113,7 +113,6 @@ var hitsP = {
 opponentGrid.addEventListener('click', function(e){
     if (start()) {
     coord = e.target.id;
-    console.log(coord)
     var x = parseInt(coord[1]);
     var y = parseInt(coord[0]);
     checkHit(aiBoard, x, y);
@@ -149,8 +148,9 @@ function guessCoord() {
     if (goodGuess) {
         switch(true) {
             case east:
-                coord = guess + tries;
-                if (onBoard(coord)) {
+                x = guessX + tries;
+                y = guessY
+                if (onBoard(x, y)) {
                 checkHit(playerBoard, x, y);
                 } else {
                     changeDirection();
@@ -158,8 +158,9 @@ function guessCoord() {
                 }
                 break;
             case west:
-                coord = guess - tries;
-                if (onBoard(coord)) {
+                x = guessX - tries;
+                y = guessY
+                if (onBoard(x, y)) {
                     checkHit(playerBoard, x, y);
                     } else {
                         changeDirection();
@@ -167,8 +168,9 @@ function guessCoord() {
                     }
                 break;
             case north:
-                coord = guess + (10 * tries);
-                if (onBoard(coord)) {
+                x = guessX;
+                y = guessY - tries;
+                if (onBoard(x, y)) {
                     checkHit(playerBoard, x, y);
                     } else {
                         changeDirection();
@@ -176,8 +178,9 @@ function guessCoord() {
                     }
                 break;
             case south:
-                coord = guess - (10 * tries);
-                if (onBoard(coord)) {
+                x = guessX;
+                y = guessY + tries;
+                if (onBoard(x, y)) {
                     checkHit(playerBoard, x, y);
                     } else {
                         changeDirection();
@@ -189,8 +192,10 @@ function guessCoord() {
         }
     } else {
         tries = 0
-        var x = Math.floor(Math.random() * 10)
-        var y = Math.floor(Math.random() * 10)
+        var x = Math.floor(Math.random() * 10);
+        var y = Math.floor(Math.random() * 10);
+        guessX = x;
+        guessY = y;
         checkHit(playerBoard, x, y);
     }
     render();
@@ -268,11 +273,11 @@ function changeDirection(){
     dir -= 1;
 }}
 
-// function onBoard(coord) {
-//     if (coord >= 100 || coord < 0) {
-//         return false;
-//     } else return true;
-// }
+function onBoard(x, y) {
+    if (x > 10 || x < 0 || y > 10 || y < 0) {
+        return false;
+    } else return true;
+}
 /*-----------------------functions---------------------------------*/
 function checkHit(board, x, y) {
     if (turn === 0) return;
@@ -420,6 +425,8 @@ function hit(board, x, y) {
     if(turn === (-1)) {
         goodGuess = true;
         tries += 1
+        console.log(`tries ${tries}`)
+        console.log(goodGuess)
     }
     turn *= (-1);
 }
@@ -453,9 +460,11 @@ function render() {
 }
 
 function checkSink(type, board) {
-    return board.some(function (val) {
-        return val.toString().charAt(0) === type;
-    })
+    for(var i = 0; i < 10; i++) {
+        board.some(function (val) {
+            if(val === type) return false;
+        })
+    }return true;
 }
 
 function updateBoard() {
