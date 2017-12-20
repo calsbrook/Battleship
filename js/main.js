@@ -13,6 +13,7 @@ var tries = 0;
 var horiz = true;
 var unplaced = true;
 var player = new Audio();
+var sfx = new Audio();
 var north = south = east = west = true;
 var dir = 4;
 
@@ -114,13 +115,15 @@ opponentGrid.addEventListener('click', function(e){
     coord = e.target.id;
     checkHit(boardA);
     render();
-    checkTurn();
+    guessCoord();
     } else return;
 });
 
 playerGrid.addEventListener('click', function(e){
     place = e.target.id;
     placePlayerShips(shipToPlace);
+    sfx.src = "http://k003.kiwi6.com/hotlink/ioc4dg2gb4/waterDrop.wav";
+    sfx.play();
     render();
 })
 
@@ -192,6 +195,7 @@ function guessCoord() {
 }
 
 function hideShips() {
+    horiz = true;
     for (var key in ships) {
         spotFinder((ships[key].name))
     }
@@ -201,7 +205,6 @@ function spotFinder(ship) {
     coord = Math.floor(Math.random() * (100 - (ships[ship].size)));
     for (i = 0; i < ships[ship].size; i++) {
         if (boardA[coord + i] !== 0) {
-            console.log(boardA[coord + i])
             coord = Math.floor(Math.random() * (100 - (ships[ship].size)));
             spotFinder(ship);
         } else {
@@ -247,6 +250,7 @@ function onBoard(coord) {
 /*-----------------------functions---------------------------------*/
 function checkHit(board) {
     if (turn === 0) return;
+    console.log(board)
     switch(board[coord].toString().charAt(0)) {
         case 'H':
             if (turn === -1 && goodGuess){
@@ -262,10 +266,12 @@ function checkHit(board) {
                 changeDirection();
                 tries = 1;
                 guessCoord();
+            } else if (turn === (-1)) {
+                guessCoord();
             }
         case '0':
             board[coord] = 'M';
-            if (turn === (-1)) {
+            if (turn === (-1) && goodGuess) {
             changeDirection();
             tries = 1;
             }
@@ -328,7 +334,7 @@ function checkHit(board) {
                 }
             break;
     }
-    checkWin();
+    callback(checkWin);
 }
 
 function placePlayerShips(ship) {
@@ -365,14 +371,16 @@ function aiReset() {
         dir = 4;
         goodGuess = false;
 }
-
+function callback(cb) {
+    return cb();
+}
 function checkWin() {
     if(!checkSink('A', boardA) && !checkSink('B', boardA) && 
     !checkSink('C', boardA) && !checkSink('S', boardA) &&
     !checkSink('D', boardA)) {
         winMsg.innerHTML = 'YOU WON';
         player.src = "http://k003.kiwi6.com/hotlink/9mtc9dy3dq/Soviet_Union_National_Anthem_8-bit_Remix_25Osc_.mp3";
-        player.play;
+        player.play();
         turn = 0;
     } else if (!checkSink('A', boardP) && !checkSink('B', boardP) && 
     !checkSink('C', boardP) && !checkSink('S', boardP) &&
@@ -409,7 +417,8 @@ function init() {
     }
     winMsg.innerText = '';
     north = south = east = west = true;
-    player = new Audio();
+    player.pause();
+    sfx.src = "http://k003.kiwi6.com/hotlink/ioc4dg2gb4/waterDrop.wav";
     unplaced = true;
     render();
 }

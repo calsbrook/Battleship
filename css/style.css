@@ -3,14 +3,17 @@
 }
 
 table {
-    border: 1px black solid;
     border-collapse: collapse;
     margin: auto;
+    padding-bottom: 30px;
+    padding-left: 35%;
+    display: inline-block;
 }
 
 body {
-    background-image: url("https://vignette.wikia.nocookie.net/althistory/images/c/c3/Flag_of_the_Soviet_Union.png/revision/latest?cb=20150709212906");
-    background-color: #BC261A;
+    /*background-image: url("https://vignette.wikia.nocookie.net/althistory/images/c/c3/Flag_of_the_Soviet_Union.png/revision/latest?cb=20150709212906");
+    background-color: #BC261A;*/
+    background-color: grey;
 }
 
 h1 {
@@ -24,7 +27,7 @@ h1 {
 
 h2 {
     position: absolute;
-    color: gray;
+    color: yellow;
 }
 
 td {
@@ -33,7 +36,11 @@ td {
     background-image: url("https://i.imgur.com/sljAQJ1.png");
     
 }
-
+#buttons {
+    position: absolute;
+    align-content: right;
+    margin-left: 66.66%;
+}
 ul {
     margin: auto;
     display: inline-block;
