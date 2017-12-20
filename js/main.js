@@ -132,7 +132,7 @@ bank.addEventListener('click', function(e){
 })
 
 horiVert.addEventListener('click', function(e){
-    if (e.target.innerText === 'Verticle') {
+    if (e.target.innerText === 'Vertical') {
         horiz = false;
     } else if (e.target.innerText === 'Horizontal') {
         horiz = true;
