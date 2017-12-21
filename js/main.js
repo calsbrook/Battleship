@@ -1,4 +1,5 @@
 /*------------------------vars and stuff--------------------------*/
+
 var opponentGrid = document.getElementById('opponentGrid');
 var playerGrid = document.getElementById('playerGrid');
 var msg = document.getElementById('speech');
@@ -13,7 +14,6 @@ var goodGuess = false;
 var tries = 0;
 var horiz = true;
 var unplaced = true;
-var player = new Audio();
 var direction = 'east';
 
 var playerBoard = createEmptyBoard();
@@ -24,45 +24,40 @@ var ships = {
         name: 'aircraftCarrier',
         abb: 'A',
         size: 5,
-        sound: 'placeholder',
         count: 0
     },
     battleship: {
         name: 'battleship',
         abb: 'B',
         size: 4,
-        sound: 'placeholder',
         count: 0
     },
     cruiser: {
         name: 'cruiser',
         abb: 'C',
         size: 3,
-        sound: 'placeholder',
         count: 0
     },
     submarine: {
         name: 'submarine',
         abb: 'S',
         size: 3,
-        sound: 'placeholder',
         count: 0
     },
     destroyer: {
         name: 'destroyer',
         abb: 'D',
         size: 2,
-        sound: 'placeholder',
         count: 0
     }
 }
 
-var hitsA = {
+var aiTiles = {
     H: 'url("https://i.imgur.com/QLotCpU.png")',
     M: 'url("https://i.imgur.com/DtyBdAn.png")',
     0: 'url("https://i.imgur.com/sljAQJ1.png)'
 }
-var hitsP = {
+var playerTiles = {
     H: 'url("https://i.imgur.com/QLotCpU.png")',
     M: 'url("https://i.imgur.com/DtyBdAn.png")',
     0: 'url("https://i.imgur.com/sljAQJ1.png)',
@@ -274,7 +269,9 @@ function onBoard(x, y) {
         return false;
     } else return true;
 }
+
 /*-----------------------functions---------------------------------*/
+
 function checkHit(board, x, y) {
     if (play === 0) return;
     switch(board[y][x].toString().charAt(0)) {
@@ -395,9 +392,11 @@ function aiReset() {
     tries = 0;
     goodGuess = false;
 }
+
 function callback(cb) {
     return cb();
 }
+
 function checkWin() {
     if(checkSink('A', aiBoard) && checkSink('B', aiBoard) && 
     checkSink('C', aiBoard) && checkSink('S', aiBoard) &&
@@ -405,8 +404,6 @@ function checkWin() {
         winMsg.innerHTML = 'YOU WON';
         msg.style.display = 'block';
         msg.innerHTML = 'We did it comrade! We defeated the capitalists!'
-        // player.src = "https://k003.kiwi6.com/hotlink/9mtc9dy3dq/Soviet_Union_National_Anthem_8-bit_Remix_25Osc_.mp3";
-        // player.play();
         play = 0;
     } else if (checkSink('A', playerBoard) && checkSink('B', playerBoard) && 
     checkSink('C', playerBoard) && checkSink('S', playerBoard) &&
@@ -442,8 +439,8 @@ function updateBoard() {
                 aiIndex = '0' + aiIndex
             }
             var playerIndex = i * 10 + j + 100;
-            document.getElementById(aiIndex).style.backgroundImage = hitsA[aiBoard[i][j]];
-            document.getElementById((playerIndex)).style.backgroundImage = hitsP[playerBoard[i][j]];
+            document.getElementById(aiIndex).style.backgroundImage = aiTiles[aiBoard[i][j]];
+            document.getElementById((playerIndex)).style.backgroundImage = playerTiles[playerBoard[i][j]];
         }
     }
 }
@@ -464,7 +461,6 @@ function init() {
         ships[ship].count = 0;
     }
     winMsg.innerText = '';
-    // player.pause();
     unplaced = true;
     render();
 }

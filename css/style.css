@@ -81,14 +81,15 @@ h2 {
 td {
     width: 34px;
     height: 34px;
-    background-image: url("https://i.imgur.com/sljAQJ1.png");
 }
+
 #buttons {
     position: absolute;
     align-content: right;
     margin-left: 66.66%;
     margin-top: -50%;
 }
+
 ul {
     margin: auto;
     display: inline-block;
