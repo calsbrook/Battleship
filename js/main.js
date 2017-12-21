@@ -2,18 +2,18 @@
 var opponentGrid = document.getElementById('opponentGrid');
 var playerGrid = document.getElementById('playerGrid');
 var msg = document.getElementById('speech');
+var reaganSpeech = document.getElementById('reaganSpeech');
 var winMsg = document.getElementById('winMsg');
 var bank = document.getElementById('bank');
 var horiVert = document.getElementById('horiVert');
 var shipToPlace = '';
 var guessX, guessY;
-var play = 1
+var play = 1;
 var goodGuess = false;
 var tries = 0;
 var horiz = true;
 var unplaced = true;
 var player = new Audio();
-var sfx = new Audio();
 var direction = 'east';
 
 var playerBoard = createEmptyBoard();
@@ -124,8 +124,6 @@ opponentGrid.addEventListener('click', function(e){
 playerGrid.addEventListener('click', function(e){
     var place = e.target.id;
     placePlayerShip(shipToPlace, place);
-    sfx.src = "http://k003.kiwi6.com/hotlink/ioc4dg2gb4/waterDrop.wav";
-    sfx.play();
     render();
 })
 
@@ -331,17 +329,22 @@ function checkHit(board, x, y) {
 }
 
 function message(board, ship) {
-    msg.style.display = 'block';
     if (board === aiBoard){
+        msg.style.display = 'block';
         msg.innerHTML = `We sank their ${ship} comrade!`;
     } else if(board === playerBoard) {
-        msg.innerHTML = `The capitalists have sunk our ${ship} comrade!`;
+        reaganSpeech.style.display = 'block';
+        reaganSpeech.innerHTML = `Take that evil empire, we sank your ${ship}!`;
         aiReset();
     }
-    setTimeout(function() {
-        msg.style.display = 'none';
-        msg.innerHTML = '';
-    }, 3000)
+    if (play === 1) {
+        setTimeout(function() {
+            msg.style.display = 'none';
+            msg.innerHTML = '';
+            reaganSpeech.style.display = 'none';
+            reaganSpeech.innerHTML = '';
+        }, 3000)
+    }
 }
 
 function placePlayerShip(ship, place) {
@@ -400,13 +403,19 @@ function checkWin() {
     checkSink('C', aiBoard) && checkSink('S', aiBoard) &&
     checkSink('D', aiBoard)) {
         winMsg.innerHTML = 'YOU WON';
+        msg.style.display = 'block';
+        msg.innerHTML = 'We did it comrade! We defeated the capitalists!'
         player.src = "https://k003.kiwi6.com/hotlink/9mtc9dy3dq/Soviet_Union_National_Anthem_8-bit_Remix_25Osc_.mp3";
         player.play();
         play = 0;
     } else if (checkSink('A', playerBoard) && checkSink('B', playerBoard) && 
     checkSink('C', playerBoard) && checkSink('S', playerBoard) &&
     checkSink('D', playerBoard)) {
-        winMsg.innerHTML = 'This AI is a couple days old and beat you...';
+        winMsg.innerHTML = 'You lose';
+        msg.style.display = 'block'
+        reaganSpeech.style.display = 'block';
+        msg.innerHTML = 'N... Nani?'
+        reaganSpeech.innerHTML = 'Get rekt';
         play = 0
     }
 }
@@ -450,14 +459,12 @@ function init() {
     playerBoard = createEmptyBoard();
     aiBoard = createEmptyBoard();
     play = 1;
-    goodGuess = false;
+    aiReset();
     for (const ship in ships) {
         ships[ship].count = 0;
     }
     winMsg.innerText = '';
-    north = south = east = west = true;
     player.pause();
-    sfx.src = "https://k003.kiwi6.com/hotlink/ioc4dg2gb4/waterDrop.wav";
     unplaced = true;
     render();
 }
