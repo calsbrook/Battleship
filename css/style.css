@@ -2,6 +2,13 @@
     font-family: 'Russo One', sans-serif;
 }
 
+#title {
+    position: absolute;
+    display: block;
+    margin-left: 5%;
+    margin-top: 2%;
+}
+
 table {
     border-collapse: collapse;
     margin: auto;
@@ -18,6 +25,18 @@ table {
     display: inline-block;
     border: 2px solid black;
     margin-top: 20%;
+    margin-left: 5%;
+    border-radius: 10px;
+}
+
+#ike {
+    display: inline-block;
+    position: absolute;
+    border: 2px solid black;
+    background-color: blue;
+    margin-top: -25%;
+    margin-left: 69%;
+    border-radius: 10px;
 }
 
 #speech {
@@ -30,6 +49,7 @@ table {
     margin-left: 20%;
     padding: 20px;
     border-radius: 10px;
+    display: none;
 }
 
 body {
@@ -56,7 +76,6 @@ td {
     width: 34px;
     height: 34px;
     background-image: url("https://i.imgur.com/sljAQJ1.png");
-    
 }
 #buttons {
     position: absolute;
@@ -74,7 +93,8 @@ li {
     border: 1px darkSlateGrey solid;
     background-color: cyan;
     cursor: pointer;
-    padding: 2px;
+    padding: 3px;
+    border-radius: 5px;
 }
 
 #opponentGrid td:hover {

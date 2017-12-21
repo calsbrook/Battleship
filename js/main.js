@@ -7,7 +7,7 @@ var bank = document.getElementById('bank');
 var horiVert = document.getElementById('horiVert');
 var shipToPlace = '';
 var guessX, guessY;
-var turn = 1
+var play = 1
 var goodGuess = false;
 var tries = 0;
 var horiz = true;
@@ -249,16 +249,17 @@ function changeDirection(){
 }}
 
 function onBoard(x, y) {
-    if (x > 10 || x < 0 || y > 10 || y < 0) {
+    if (x >= 10 || x < 0 || y >= 10 || y < 0) {
         return false;
     } else return true;
 }
 /*-----------------------functions---------------------------------*/
 function checkHit(board, x, y) {
-    if (turn === 0) return;
+    if (play === 0) return;
     switch(board[y][x].toString().charAt(0)) {
         case 'H':
-            if (board === playerBoard && goodGuess){
+            if (board === aiBoard) break;
+            else if (board === playerBoard && goodGuess){
                 changeDirection();
                 tries = 1;
                 guessCoord();
@@ -280,7 +281,6 @@ function checkHit(board, x, y) {
             changeDirection();
             tries = 1;
             }
-            //turn *= (-1);
             break;
         case 'A': //aircraft carrier
             hit(board, x, y);
@@ -327,6 +327,7 @@ function checkHit(board, x, y) {
 }
 
 function message(board, ship) {
+    msg.style.display = 'block';
     if (board === aiBoard){
         msg.innerHTML = `We sank their ${ship} comrade!`;
     } else if(board === playerBoard) {
@@ -334,6 +335,7 @@ function message(board, ship) {
         aiReset();
     }
     setTimeout(function() {
+        msg.style.display = 'none';
         msg.innerHTML = '';
     }, 3000)
 }
@@ -378,10 +380,7 @@ function hit(board, x, y) {
     if(board === playerBoard) {
         goodGuess = true;
         tries += 1
-        console.log(`tries ${tries}`)
-        console.log(goodGuess)
     }
-    //turn *= (-1);
 }
 
 function aiReset() {
@@ -399,12 +398,12 @@ function checkWin() {
         winMsg.innerHTML = 'YOU WON';
         player.src = "https://k003.kiwi6.com/hotlink/9mtc9dy3dq/Soviet_Union_National_Anthem_8-bit_Remix_25Osc_.mp3";
         player.play();
-        turn = 0;
+        play = 0;
     } else if (checkSink('A', playerBoard) && checkSink('B', playerBoard) && 
     checkSink('C', playerBoard) && checkSink('S', playerBoard) &&
     checkSink('D', playerBoard)) {
         winMsg.innerHTML = 'This AI is a couple days old and beat you...';
-        turn = 0
+        play = 0
     }
 }
 
@@ -446,7 +445,7 @@ function createEmptyBoard() {
 function init() {
     playerBoard = createEmptyBoard();
     aiBoard = createEmptyBoard();
-    turn = 1;
+    play = 1;
     goodGuess = false;
     for (const ship in ships) {
         ships[ship].count = 0;
