@@ -14,8 +14,7 @@ var horiz = true;
 var unplaced = true;
 var player = new Audio();
 var sfx = new Audio();
-var north = south = east = west = true;
-var dir = 4;
+var direction = 'east';
 
 var playerBoard = createEmptyBoard();
 var aiBoard = createEmptyBoard();
@@ -115,10 +114,11 @@ opponentGrid.addEventListener('click', function(e){
     coord = e.target.id;
     var x = parseInt(coord[1]);
     var y = parseInt(coord[0]);
+    if (aiBoard[y][x] === 'H' || aiBoard[y][x] === 'M') return;
     checkHit(aiBoard, x, y);
     render();
-    guessCoord();
-    } else return;
+    aiGuess();
+    }
 });
 
 playerGrid.addEventListener('click', function(e){
@@ -144,61 +144,100 @@ horiVert.addEventListener('click', function(e){
 })
 
 /*--------------------------AI----------------------------*/
-function guessCoord() {
-    if (goodGuess) {
-        switch(true) {
-            case east:
-                x = guessX + tries;
-                y = guessY
-                if (onBoard(x, y)) {
-                checkHit(playerBoard, x, y);
-                } else {
-                    changeDirection();
-                    guessCoord();
-                }
-                break;
-            case west:
-                x = guessX - tries;
-                y = guessY
-                if (onBoard(x, y)) {
-                    checkHit(playerBoard, x, y);
-                    } else {
-                        changeDirection();
-                        guessCoord();
-                    }
-                break;
-            case north:
-                x = guessX;
-                y = guessY - tries;
-                if (onBoard(x, y)) {
-                    checkHit(playerBoard, x, y);
-                    } else {
-                        changeDirection();
-                        guessCoord();
-                    }
-                break;
-            case south:
-                x = guessX;
-                y = guessY + tries;
-                if (onBoard(x, y)) {
-                    checkHit(playerBoard, x, y);
-                    } else {
-                        changeDirection();
-                        guessCoord();
-                    }
-                break;
-            default:
-                break;
-        }
+
+function aiGuess() {
+    if (!goodGuess) {
+        randomGuess();
     } else {
-        tries = 0
-        var x = Math.floor(Math.random() * 10);
-        var y = Math.floor(Math.random() * 10);
-        guessX = x;
-        guessY = y;
-        checkHit(playerBoard, x, y);
+        educatedGuess();
     }
     render();
+}
+
+function randomGuess() {
+    tries = 0
+    var x = Math.floor(Math.random() * 10);
+    var y = Math.floor(Math.random() * 10);
+    if (isValid(playerBoard, x, y)) {
+        guessX = x;
+        guessY = y;
+        checkHit(playerBoard, x, y)
+    } else {
+        randomGuess();
+    }
+}
+
+function educatedGuess() {
+    switch(direction) {
+        case 'east':
+            x = guessX + tries;
+            y = guessY;
+            if (onBoard(x, y) && isValid(playerBoard, x, y)) {
+                checkHit(playerBoard, x, y);
+        } else {
+            changeDirection();
+            educatedGuess();
+        }
+            break;
+        case 'west':
+            x = guessX - tries;
+            y = guessY;
+            if (onBoard(x, y) && isValid(playerBoard, x, y)) {
+                checkHit(playerBoard, x, y);
+            } else {
+                changeDirection();
+                educatedGuess();
+            }
+            break;
+        case 'north':
+            x = guessX
+            y = guessY - tries;
+            if (onBoard(x, y) && isValid(playerBoard, x, y)) {
+                checkHit(playerBoard, x, y)
+            } else {
+                changeDirection();
+                educatedGuess();
+            }
+            break;
+        case 'south':
+            x = guessX
+            y = guessY + tries;
+            if (onBoard(x, y) && isValid(playerBoard, x, y)) {
+                checkHit(playerBoard, x, y)
+            } else {
+                direction = 'east';
+                tries = 0;
+                randomGuess();
+            }
+            break;
+        
+    }
+}
+
+function changeDirection() {
+    switch (direction) {
+        case 'east':
+            direction = 'west';
+            tries = 1;
+            break;
+        case 'west':
+            direction = 'north';
+            tries = 1;
+            break;
+        case 'north':
+            direction = 'south';
+            tries = 1;
+            break;
+        case south:
+            aiReset();
+            break;
+    }
+}
+
+function isValid(board, x,y) {
+    if (board[y][x] === 'H' || board[y][x] === 'M') {
+        return false;
+    } else return true;
 }
 
 function hideShips() {
@@ -232,22 +271,6 @@ function placeAIShips(ship) {
     }
 }
 
-function changeDirection(){
-    if (goodGuess) {
-        if(dir === 4) {
-            east = false;
-        } else if (dir === 3) {
-            west = false;
-        } else if (dir === 2) {
-            north = false;
-        } else if (dir ===1) {
-            south = false;
-        } else if (dir <= 0) {
-            aiReset();
-        }
-    dir -= 1;
-}}
-
 function onBoard(x, y) {
     if (x >= 10 || x < 0 || y >= 10 || y < 0) {
         return false;
@@ -257,29 +280,10 @@ function onBoard(x, y) {
 function checkHit(board, x, y) {
     if (play === 0) return;
     switch(board[y][x].toString().charAt(0)) {
-        case 'H':
-            if (board === aiBoard) break;
-            else if (board === playerBoard && goodGuess){
-                changeDirection();
-                tries = 1;
-                guessCoord();
-            } else if (board === playerBoard) {
-                guessCoord();
-            } else break;
-        case 'M':
-            if (board === aiBoard)break;
-            if (board === playerBoard && goodGuess) {
-                changeDirection();
-                tries = 1;
-                guessCoord();
-            } else if (board === playerBoard) {
-                guessCoord();
-            }
         case '0':
             board[y][x] = 'M';
             if (board === playerBoard && goodGuess) {
-            changeDirection();
-            tries = 1;
+                changeDirection();
             }
             break;
         case 'A': //aircraft carrier
@@ -384,8 +388,8 @@ function hit(board, x, y) {
 }
 
 function aiReset() {
-    north = south = east = west = true;
-    dir = 4;
+    direction = 'east';
+    tries = 0;
     goodGuess = false;
 }
 function callback(cb) {
