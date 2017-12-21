@@ -3,6 +3,7 @@
 ![Screenshot](https://i.imgur.com/4EACjIf.png)
 ## The Game
 You are assisting comrade Stalin in defeating the capitalist forces of Darth Ronald Reagan.  First you strategically place your ships by clicking their name and your desired orientation.  The capitalists will randomly place their ships as well. Your radars have been damaged and all you can do is guess where their ships might be hiding.  Good luck comrade!
+
 <img src="https://i.imgur.com/BIbrR0j.jpg" width="200">
 <img src="https://i.imgur.com/0qyrSDY.png" width="200">
 <img src="https://i.imgur.com/rAtGPiq.png" width="200">
