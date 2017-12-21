@@ -405,8 +405,8 @@ function checkWin() {
         winMsg.innerHTML = 'YOU WON';
         msg.style.display = 'block';
         msg.innerHTML = 'We did it comrade! We defeated the capitalists!'
-        player.src = "https://k003.kiwi6.com/hotlink/9mtc9dy3dq/Soviet_Union_National_Anthem_8-bit_Remix_25Osc_.mp3";
-        player.play();
+        // player.src = "https://k003.kiwi6.com/hotlink/9mtc9dy3dq/Soviet_Union_National_Anthem_8-bit_Remix_25Osc_.mp3";
+        // player.play();
         play = 0;
     } else if (checkSink('A', playerBoard) && checkSink('B', playerBoard) && 
     checkSink('C', playerBoard) && checkSink('S', playerBoard) &&
@@ -464,7 +464,7 @@ function init() {
         ships[ship].count = 0;
     }
     winMsg.innerText = '';
-    player.pause();
+    // player.pause();
     unplaced = true;
     render();
 }
