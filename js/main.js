@@ -191,17 +191,17 @@ function educatedGuess() {
             x = guessX
             y = guessY - tries;
             if (onBoard(x, y) && isValid(playerBoard, x, y)) {
-                checkHit(playerBoard, x, y)
+                checkHit(playerBoard, x, y);
             } else {
                 changeDirection();
                 educatedGuess();
             }
             break;
         case 'south':
-            x = guessX
+            x = guessX;
             y = guessY + tries;
             if (onBoard(x, y) && isValid(playerBoard, x, y)) {
-                checkHit(playerBoard, x, y)
+                checkHit(playerBoard, x, y);
             } else {
                 direction = 'east';
                 tries = 0;
@@ -240,14 +240,14 @@ function isValid(board, x,y) {
 
 function hideShips() {
     for (var key in ships) {
-        placeAIShips((ships[key].name))
+        placeAIShips((ships[key].name));
     }
 }
 
 function placeAIShips(ship) {
     var x = Math.floor(Math.random() * 10);
     var y = Math.floor(Math.random() * 10);
-    var coin = Math.floor(Math.random() * 2)
+    var coin = Math.floor(Math.random() * 2);
     if (coin > 0) {
         horiz = true;
     }else {
@@ -255,8 +255,7 @@ function placeAIShips(ship) {
     }
     if(ships[ship].count === 1 && isClear(aiBoard, ship, x, y)) {
         for (var i = 0; i < ships[ship].size; i++) {
-            if(horiz === true)
-            {
+            if(horiz === true) {
                 aiBoard[y][x + i] = ships[ship].abb + i;
                 ships[ship].count = 1;
             } else {
@@ -287,9 +286,9 @@ function checkHit(board, x, y) {
         case 'A': //aircraft carrier
             hit(board, x, y);
             if (!checkSink('A', board)) {
-                break
+                break;
                 } else {
-                    message(board, 'aircraft carrier')
+                    message(board, 'aircraft carrier');
                 }
             break;
         case 'B': //battleship
@@ -297,7 +296,7 @@ function checkHit(board, x, y) {
             if (!checkSink('B', board)) {
                 break;
                 } else {
-                    message(board, 'battleship')
+                    message(board, 'battleship');
                 }
             break;
         case 'C': //cruiser
@@ -305,7 +304,7 @@ function checkHit(board, x, y) {
             if (!checkSink('C', board)) {
                 break;
                 } else {
-                    message(board, 'cruiser')
+                    message(board, 'cruiser');
                 }
             break;
         case 'S': //submarine
@@ -313,15 +312,15 @@ function checkHit(board, x, y) {
             if (!checkSink('S', board)) {
                 break;
                 } else {
-                    message(board, 'submarine')
+                    message(board, 'submarine');
                 }
             break;
         case 'D': //destroyer
             hit(board, x, y);
             if (!checkSink('D', board)) {
-                break
+                break;
                 } else {
-                    message(board, 'destroyer')
+                    message(board, 'destroyer');
                 }
             break;
     }
@@ -343,7 +342,7 @@ function message(board, ship) {
             msg.innerHTML = '';
             reaganSpeech.style.display = 'none';
             reaganSpeech.innerHTML = '';
-        }, 3000)
+        }, 3000);
     }
 }
 
@@ -352,8 +351,7 @@ function placePlayerShip(ship, place) {
     var y = parseInt(place[1]);
     if(ships[ship].count === 0 && isClear(playerBoard, ship, x, y)) {
         for (var i = 0; i < ships[ship].size; i++) {
-            if(horiz === true)
-            {
+            if(horiz === true) {
                 playerBoard[y][x + i] = ships[ship].abb + i;
                 ships[ship].count = 1;
             } else {
@@ -386,7 +384,7 @@ function hit(board, x, y) {
     board[y][x] = 'H';
     if(board === playerBoard) {
         goodGuess = true;
-        tries += 1
+        tries += 1;
     }
 }
 
@@ -404,7 +402,7 @@ function checkWin() {
     checkSink('D', aiBoard)) {
         winMsg.innerHTML = 'YOU WON';
         msg.style.display = 'block';
-        msg.innerHTML = 'We did it comrade! We defeated the capitalists!'
+        msg.innerHTML = 'We did it comrade! We defeated the capitalists!';
         // player.src = "https://k003.kiwi6.com/hotlink/9mtc9dy3dq/Soviet_Union_National_Anthem_8-bit_Remix_25Osc_.mp3";
         // player.play();
         play = 0;
@@ -412,11 +410,11 @@ function checkWin() {
     checkSink('C', playerBoard) && checkSink('S', playerBoard) &&
     checkSink('D', playerBoard)) {
         winMsg.innerHTML = 'You lose';
-        msg.style.display = 'block'
+        msg.style.display = 'block';
         reaganSpeech.style.display = 'block';
-        msg.innerHTML = 'N... Nani?'
+        msg.innerHTML = 'N... Nani?';
         reaganSpeech.innerHTML = 'Get rekt';
-        play = 0
+        play = 0;
     }
 }
 
@@ -439,7 +437,7 @@ function updateBoard() {
         for(var j = 0; j < 10; j++) {
             var aiIndex = i * 10 + j;
             if(aiIndex < 10) {
-                aiIndex = '0' + aiIndex
+                aiIndex = '0' + aiIndex;
             }
             var playerIndex = i * 10 + j + 100;
             document.getElementById(aiIndex).style.backgroundImage = hitsA[aiBoard[i][j]];
